@@ -61,11 +61,9 @@ public class MainActivity extends AppCompatActivity {
     CallbackManager mcallbackManager;
     ProfileTracker mProfileT;
     ImageView iv;
-    Client mKinveyClient;
     Button remove;
     FileInputStream fin;
     InputStream is;
-    Client getKinveyService;
     ImageView ivd;
     String userid;
     Button au;
@@ -76,23 +74,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App42API.initialize(MainActivity.this,"31fe046a4bba23fbeb15c63ab0dc976ba035b7bda880a79246fc002a2efd5843","13b404947b35ce97ba546d6539914dcf262ea967ec20fecdfc72e2532c5cfe4a");
-        mKinveyClient = new Client.Builder("kid_Z13FKXn9ax", "eb1eafee5c4d463ca65032faccb9f5de"
-                , this.getApplicationContext()).build();
         printKeyHash();
         final UserService us = App42API.buildUserService();
         final UploadService upservice = App42API.buildUploadService();
 
-        mKinveyClient.ping(new KinveyPingCallback() {
-            @Override
-            public void onSuccess(Boolean aBoolean) {
-                Log.d("Success",""+aBoolean);
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
 
 
 
@@ -114,18 +99,7 @@ public class MainActivity extends AppCompatActivity {
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getKinveyService.user().delete(true, new KinveyUserDeleteCallback() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(MainActivity.this, "YOu are deletetd", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Throwable throwable) {
-
-                    }
-                });
-            }
+                         }
         });
         au.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,30 +160,10 @@ public class MainActivity extends AppCompatActivity {
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
-                                        String imageURL = "https://graph.facebook.com/" + uid + "/picture?type=large";
-
-                                        //imageDownload(MainActivity.this,imageURL,uid);
 
                                     }
                                 });
                                 thread.start();
-                                upservice.uploadFile("abc", is, UploadFileType.IMAGE, "balsh", new App42CallBack() {
-                                    @Override
-                                    public void onSuccess(Object o) {
-                                        Toast.makeText(MainActivity.this, "Boom!", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    @Override
-                                    public void onException(Exception e) {
-
-                                    }
-                                });
-                                String imageURL = "https://graph.facebook.com/" + uid + "/picture?type=large";
-
-                                Picasso.with(MainActivity.this)
-                                        .load("https://graph.facebook.com/" + uid + "/picture?type=large")
-                                        .into(getTarget(uid));
-                                imageDownload(MainActivity.this,imageURL,uid);
 
 
                             }
