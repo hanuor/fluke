@@ -29,9 +29,6 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.kinvey.android.Client;
-import com.kinvey.android.callback.KinveyPingCallback;
-import com.kinvey.android.callback.KinveyUserDeleteCallback;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.upload.Upload;
@@ -85,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mcallbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_main);
-        getKinveyService = this.getKinveyService();
+        //getKinveyService = this.getKinveyService();
 
 
         fblogin = (LoginButton) findViewById(R.id.login_button);
@@ -332,10 +329,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("KeyHash:", e.toString());
         }
     }
-    public Client getKinveyService(){
-        return mKinveyClient;
-    }
-
+  
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
