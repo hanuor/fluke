@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,7 @@ import com.kinvey.android.callback.KinveyPingCallback;
 import com.kinvey.android.callback.KinveyUserDeleteCallback;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
+import com.shephertz.app42.paas.sdk.android.upload.Upload;
 import com.shephertz.app42.paas.sdk.android.upload.UploadFileType;
 import com.shephertz.app42.paas.sdk.android.upload.UploadService;
 import com.shephertz.app42.paas.sdk.android.user.UserService;
@@ -49,6 +52,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivd;
     String userid;
     Button au;
+    String aura;
 
     //User user;
     @Override
@@ -165,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         try {
                                             is = new URL("https://graph.facebook.com/" + uid + "/picture?type=large").openStream();
-                                            upservice.uploadFile("abc.png", is, UploadFileType.IMAGE, "balsh", new App42CallBack() {
+                                            upservice.uploadFileForUser("abc.jpg","ABC", is, UploadFileType.IMAGE, "balsh", new App42CallBack() {
                                                 @Override
                                                 public void onSuccess(Object o) {
                                                   //  Toast.makeText(MainActivity.this, "Boom!", Toast.LENGTH_SHORT).show();
@@ -228,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
         mProfileT = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -239,7 +245,48 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+                upservice.getFileByUser("xyz.jpg", "XYZ", new App42CallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Upload upo = (Upload)o;
+                        ArrayList<Upload.File> fileList = upo.getFileList();
+                        String urlo = null;
+                        for(int i = 0; i < fileList.size();i++ ) {
+
+
+//                    Toast.makeText(MainActivity.this, "URL "+fileList.get(i).getUrl(), Toast.LENGTH_SHORT).show();
+                            urlo = fileList.get(i).getUrl();
+
+                            //imageup(urlo);
+                            Log.d("LOLL", "" + fileList.get(i).getUrl());
+                            new DownloadImageTask((ImageView) findViewById(R.id.ivd))
+                                    .execute(fileList.get(i).getUrl());
+
+                            //tv.setText(""+urlo);
+                        }
+
+                    }
+
+                    @Override
+                    public void onException(Exception e) {
+//                Toast.makeText(MainActivity.this, ""+e, Toast.LENGTH_SHORT).show();
+                        Log.d("LOL",""+e);
+                    }
+                });
+
+
+        Log.d("AURA",""+aura);
+        Picasso.with(MainActivity.this)
+                .load(aura)
+                .into(ivd);
+
     }
+
+    private void imageup(String urlo) {
+
+        aura = urlo;
+        Picasso.with(MainActivity.this).load(aura).into(ivd);
+        }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -333,6 +380,31 @@ public class MainActivity extends AppCompatActivity {
     }
     public Client getKinveyService(){
         return mKinveyClient;
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 
 }
