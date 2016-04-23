@@ -19,9 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.androidquery.AQuery;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -57,7 +55,6 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     LoginButton fblogin;
-    private AQuery aq;
     TextView tv;
     CallbackManager mcallbackManager;
     ProfileTracker mProfileT;
@@ -100,18 +97,7 @@ public class MainActivity extends AppCompatActivity {
         au.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                us.createUser("ABC", "res", "abc@gmai.com", new App42CallBack() {
-                    @Override
-                    public void onSuccess(Object o) {
 
-                        Toast.makeText(MainActivity.this,"User inserted",Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onException(Exception e) {
-                        Toast.makeText(MainActivity.this, ""+e, Toast.LENGTH_LONG).show();
-                    }
-                });
             }
         });
         fblogin.registerCallback(mcallbackManager, new FacebookCallback<LoginResult>() {
@@ -126,9 +112,28 @@ public class MainActivity extends AppCompatActivity {
 
                                 try {
                                     tv.setText("Hi, " + object.getString("name")+" , "+object.optString("id"));
+                                    String mFullname = object.getString("name");
+                                    String userID = object.getString("id");
+                                    String email = object.getString("email");
+                                    String birthday = object.getString("birthday");
+                                    if(email!=null) {
+                                        us.createUser(userID, mFullname, email, new App42CallBack() {
+                                            @Override
+                                            public void onSuccess(Object o) {
+                                            }
+
+                                            @Override
+                                            public void onException(Exception e) {
+                                            }
+                                        });
+                                    }
+
+
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+
                                 final String uid = object.optString("id");
                                 userid = object.optString("id");
                                 String rem = "https://graph.facebook.com/" + uid+ "/picture?type=large";
@@ -149,12 +154,14 @@ public class MainActivity extends AppCompatActivity {
                                             upservice.uploadFileForUser("abc1.jpg","ABC", "https://graph.facebook.com/" + userid + "/picture?type=large", UploadFileType.IMAGE, "balsh", new App42CallBack() {
                                                 @Override
                                                 public void onSuccess(Object o) {
+                                                    Log.v("Response",""+o.toString());
                                                   //  Toast.makeText(MainActivity.this, "Boom!", Toast.LENGTH_SHORT).show();
                                                 }
 
                                                 @Override
                                                 public void onException(Exception e) {
-                                                    Log.d("LOL",""+e);
+
+                                                    Log.v("Response",""+e);
                                                    // Toast.makeText(MainActivity.this, ""+e, Toast.LENGTH_SHORT).show();
                                                 }
                                             });
