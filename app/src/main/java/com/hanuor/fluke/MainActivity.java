@@ -41,6 +41,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivd;
     String userid;
     Button au;
+    String fPath;
     String aura;
-
+    UploadService upservice;
+    UserService us;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     //User user;
@@ -70,9 +73,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         verifyStoragePermissions(this);
 
-        final UserService us = App42API.buildUserService();
-        final UploadService upservice = App42API.buildUploadService();
+        us = App42API.buildUserService();
+        upservice = App42API.buildUploadService();
         mcallbackManager = CallbackManager.Factory.create();
+
         setContentView(R.layout.activity_main);
         fblogin = (LoginButton) findViewById(R.id.login_button);
         remove = (Button) findViewById(R.id.remove);
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         au.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
 
             }
         });
@@ -133,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
                                 Picasso.with(MainActivity.this)
                                         .load("https://graph.facebook.com/" + uid+ "/picture?type=large")
                                         .into(iv);
-                                Picasso.with(MainActivity.this).load(rem).into(target);
+
+                                uploadProfilePicture(userid,rem);
                                 Thread thread = new Thread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -238,13 +244,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void uploadProfilePicture(String userid,String url) {
+        Picasso.with(MainActivity.this).load(url).into(target);
+
+
+    }
+
     private Target target = new Target() {
+        String uid = userid;
         @Override
         public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-            new Thread(new Runnable() {
+            new GetFilePath(bitmap).execute();
+            /*new Thread(new Runnable() {
                 @Override
                 public void run() {
                     Log.d("Runtastic","GO");
+
+
 
                     File fm = new File(
                             Environment.getExternalStorageDirectory().getPath()
@@ -253,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                     File  file = new File(fm,"INGS.jpg");
                     Log.d("Runtastic","GOa"+
                             file.getPath());
-                    String fPath = file.getAbsolutePath();
+                    fPath = file.getAbsolutePath();
                     try {
                         file.createNewFile();
 
@@ -266,7 +282,10 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d("Runtastic","GOd");
                         Bitmap myBitmap = BitmapFactory.decodeFile(fPath);
-                      ivd.setImageBitmap(myBitmap);
+                        ivd.setImageBitmap(myBitmap);
+                        //startuploading
+
+
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -275,6 +294,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }).start();
+Log.v("Check",""+uid+""+fPath);
+*/
         }
 
         @Override
@@ -309,7 +330,67 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    private class GetFilePath extends AsyncTask<Void, Void, String> {
+        ImageView bmImage;
+        String address;
+        Bitmap bits;
 
+     public GetFilePath(Bitmap bits){
+         this.bits = bits;
+     }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.v("check",""+s+""+userid);
+            upservice.uploadFileForUser(userid+".jpg", userid, s, UploadFileType.IMAGE, "User " + userid + " Image", new App42CallBack() {
+                @Override
+                public void onSuccess(Object o) {
+                    Log.d("Up","loaded");
+                }
+
+                @Override
+                public void onException(Exception e) {
+                    Log.v("Up"," "+e);
+                    e.printStackTrace();
+
+                }
+            });
+
+
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            Log.d("Runtastic", "GO");
+
+
+
+            File fm = new File(
+                    Environment.getExternalStorageDirectory().getPath()
+                            + "/fluke");
+            fm.mkdirs();
+            File file = new File(fm, "INGS.jpg");
+            Log.d("Runtastic", "GOa" +
+                    file.getPath());
+            fPath = file.getAbsolutePath();
+            try {
+                file.createNewFile();
+
+                Log.d("Runtastic", "GOb");
+                FileOutputStream ostream = new FileOutputStream(file);
+                Log.d("Runtastic", "GOc");
+               // Bitmap bmp = BitmapFactory.decodeFile(fPath);
+                bits.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+                ostream.close();
+                return fPath;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return fPath;
+        }
+    }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
