@@ -1,6 +1,7 @@
 package com.hanuor.fluke;
 
-import android.content.Context;
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -54,6 +57,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     LoginButton fblogin;
+    private AQuery aq;
     TextView tv;
     CallbackManager mcallbackManager;
     ProfileTracker mProfileT;
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivd;
     String userid;
     Button au;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
     String aura;
 
     //User user;
@@ -74,17 +79,11 @@ public class MainActivity extends AppCompatActivity {
         printKeyHash();
         final UserService us = App42API.buildUserService();
         final UploadService upservice = App42API.buildUploadService();
-
-
-
-
         FacebookSdk.sdkInitialize(this);
         mcallbackManager = CallbackManager.Factory.create();
+        verifyStoragePermissions(MainActivity.this);
 
         setContentView(R.layout.activity_main);
-        //getKinveyService = this.getKinveyService();
-
-
         fblogin = (LoginButton) findViewById(R.id.login_button);
         remove = (Button) findViewById(R.id.remove);
         tv = (TextView) findViewById(R.id.tv);
@@ -132,16 +131,22 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 final String uid = object.optString("id");
                                 userid = object.optString("id");
+                                String rem = "https://graph.facebook.com/" + uid+ "/picture?type=large";
                                 Picasso.with(MainActivity.this)
                                         .load("https://graph.facebook.com/" + uid+ "/picture?type=large")
                                         .into(iv);
+                                Picasso.with(MainActivity.this).load(rem).into(target);
                                 Thread thread = new Thread(new Runnable() {
                                     @Override
                                     public void run() {
 
                                         try {
-                                            is = new URL("https://graph.facebook.com/" + uid + "/picture?type=large").openStream();
-                                            upservice.uploadFileForUser("abc.jpg","ABC", is, UploadFileType.IMAGE, "balsh", new App42CallBack() {
+                                            userid = object.optString("id");
+                                            Log.v("Id",""+userid);
+
+                                            InputStream ism =  new URL("https://graph.facebook.com/" + userid + "/picture?type=large").openStream();
+                                           // is = new URL("https://graph.facebook.com/" + uid + "/picture?type=large").openStream();
+                                            upservice.uploadFileForUser("abc1.jpg","ABC", "https://graph.facebook.com/" + userid + "/picture?type=large", UploadFileType.IMAGE, "balsh", new App42CallBack() {
                                                 @Override
                                                 public void onSuccess(Object o) {
                                                   //  Toast.makeText(MainActivity.this, "Boom!", Toast.LENGTH_SHORT).show();
@@ -233,13 +238,85 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void imageup(String urlo) {
+    private Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("Runtastic","GO");
 
-        aura = urlo;
-        Picasso.with(MainActivity.this).load(aura).into(ivd);
+                    File fm = new File(
+                            Environment.getExternalStorageDirectory().getPath()
+                                    + "/fluke");
+                    fm.mkdirs();
+                    File  file = new File(fm,"INGS.jpg");
+                    Log.d("Runtastic","GOa"+
+                            file.getPath());
+                    String fPath = file.getAbsolutePath();
+                    try {
+                        file.createNewFile();
+
+                        Log.d("Runtastic","GOb");
+                        FileOutputStream ostream = new FileOutputStream(file);
+
+                        Log.d("Runtastic","GOc");
+                        bitmap.compress(Bitmap.CompressFormat.JPEG,100,ostream);
+                        ostream.close();
+
+                        Log.d("Runtastic","GOd");
+                        Bitmap myBitmap = BitmapFactory.decodeFile(fPath);
+                      ivd.setImageBitmap(myBitmap);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+
+                        Log.d("Runtastic","GOEEE "+e);
+                    }
+                }
+            }).start();
         }
 
-    @Override
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+
+            Log.d("Runtastic","GO2");
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            Log.d("Runtastic","GO3");
+        }
+    };
+
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+ @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     mcallbackManager.onActivityResult(requestCode, resultCode,data);
@@ -255,64 +332,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static void imageDownload(Context ctx, String url,String uid){
-        Picasso.with(ctx)
-                .load("https://graph.facebook.com/" + uid + "/picture?type=large")
-                    .into(getTarget("https://graph.facebook.com/" + uid + "/picture?type=large"));
-    }
-
-    //target to save
-    private static Target getTarget(final String url){
-        Target target = new Target(){
-
-            @Override
-            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        //Bitmap bmp = createBitmap();
-                            Log.v("Hello","Hey");
-                        File stream = new File(Environment.getExternalStorageDirectory().getPath() + "/image1.jpg");
-                        //         + "/you.png");
-                        // stream = new FileOutputStream("/sdcard/you.png");
-                        Log.v("Stream",""+stream);
-                        try {
-                            stream.createNewFile();
-                            FileOutputStream ostream = new FileOutputStream(stream);
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
-                            ostream.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + url);
-                        try {
-                            file.createNewFile();
-                            FileOutputStream ostream = new FileOutputStream(file);
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
-                            ostream.flush();
-                            ostream.close();
-
-                        } catch (IOException e) {
-                            Log.e("IOException", e.getLocalizedMessage());
-                        }
-                    }
-                }).start();
-
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-        return target;
-    }
 
     private void printKeyHash() {
         // Add code to print out the key hash
@@ -329,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("KeyHash:", e.toString());
         }
     }
-  
+
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
