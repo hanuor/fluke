@@ -1,4 +1,4 @@
-package com.hanuor.fluke;
+package com.hanuor.fluke.launcher;
 
 import android.Manifest;
 import android.app.Activity;
@@ -27,6 +27,7 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.hanuor.fluke.R;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.upload.Upload;

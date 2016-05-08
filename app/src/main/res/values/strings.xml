@@ -4,4 +4,5 @@
     <string name="app42secret">13b404947b35ce97ba546d6539914dcf262ea967ec20fecdfc72e2532c5cfe4a</string>
     <string name="app42apikey">31fe046a4bba23fbeb15c63ab0dc976ba035b7bda880a79246fc002a2efd5843</string>
     <string name="facebook_app_id">1571011956525222</string>
+    <string name="music_graph_api_key">527a48eb2415c79cfd66ab7bc66a3904</string>
 </resources>

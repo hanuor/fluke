@@ -1,4 +1,4 @@
-package com.hanuor.fluke;
+package com.hanuor.fluke.init;
 
 import android.app.Application;
 import android.content.pm.PackageInfo;
@@ -17,12 +17,15 @@ import java.security.NoSuchAlgorithmException;
  */
 public class FlukeInit extends Application {
 
+
     @Override
     public void onCreate() {
         super.onCreate();
         App42API.initialize(this, "31fe046a4bba23fbeb15c63ab0dc976ba035b7bda880a79246fc002a2efd5843", "13b404947b35ce97ba546d6539914dcf262ea967ec20fecdfc72e2532c5cfe4a");
         FacebookSdk.sdkInitialize(this);
+        //mInstance = this;
  }
+
     private void printKeyHash() {
         // Add code to print out the key hash
         try {
