@@ -60,11 +60,11 @@ public class MainActivity extends AppCompatActivity {
     InputStream is;
     ImageView ivd;
     String userid;
-    Button au;
     String fPath;
     String aura;
     UploadService upservice;
     UserService us;
+    Button b2;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     //User user;
@@ -83,20 +83,22 @@ public class MainActivity extends AppCompatActivity {
         tv = (TextView) findViewById(R.id.tv);
         iv = (ImageView) findViewById(R.id.iv);
         ivd = (ImageView) findViewById(R.id.ivd);
-        au = (Button) findViewById(R.id.au);
+        b2 = (Button) findViewById(R.id.b2);
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ac = new Intent();
+                ac.setClass(MainActivity.this,TestAct.class);
+                startActivity(ac);
+
+            }
+        });
          fblogin.setReadPermissions(Arrays.asList(
                  "public_profile", "email", "user_birthday", "user_friends"));
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                          }
-        });
-        au.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-            }
         });
         fblogin.registerCallback(mcallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -255,48 +257,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
             new GetFilePath(bitmap).execute();
-            /*new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("Runtastic","GO");
-
-
-
-                    File fm = new File(
-                            Environment.getExternalStorageDirectory().getPath()
-                                    + "/fluke");
-                    fm.mkdirs();
-                    File  file = new File(fm,"INGS.jpg");
-                    Log.d("Runtastic","GOa"+
-                            file.getPath());
-                    fPath = file.getAbsolutePath();
-                    try {
-                        file.createNewFile();
-
-                        Log.d("Runtastic","GOb");
-                        FileOutputStream ostream = new FileOutputStream(file);
-
-                        Log.d("Runtastic","GOc");
-                        bitmap.compress(Bitmap.CompressFormat.JPEG,100,ostream);
-                        ostream.close();
-
-                        Log.d("Runtastic","GOd");
-                        Bitmap myBitmap = BitmapFactory.decodeFile(fPath);
-                        ivd.setImageBitmap(myBitmap);
-                        //startuploading
-
-
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-
-                        Log.d("Runtastic","GOEEE "+e);
-                    }
-                }
-            }).start();
-Log.v("Check",""+uid+""+fPath);
-*/
-        }
+         }
 
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
