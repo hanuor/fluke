@@ -26,14 +26,18 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.Random;
@@ -113,8 +117,9 @@ public class FirstScreenFrag extends Fragment {
             String track = intent.getStringExtra("track");
             //String ai = bundle.get("albumid");
             //Long mela = Long.getLong(ai);
-            hotswapping(album);
-
+            if(album!=null) {
+                hotswapping(artist);
+            }
 
             Log.d("Music",artist+":"+album+":"+track+"ablum id"+" "+bundle.get("albumId"));
            // iv.setText("Music"+artist+":"+album+":"+track);
@@ -124,20 +129,54 @@ public class FirstScreenFrag extends Fragment {
 
     private void hotswapping(String album) {
         if(album!=null) {
-            String append = ApiName.MUSICGRAPH + "" + album;
+            Log.d("resssss",""+album);
 
-            JsonArrayRequest jsonRequest = new JsonArrayRequest(append, new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                try{
-                    if(response!=null){
-                        Log.d("Response",""+response.getString(0));
-                    }
-                }catch (Exception e){
+            StringBuilder m = new StringBuilder();
+            m.append(ApiName.MUSICGRAPH_ARTIST);
+            m.append(album);
+            String adler = m.toString();
+            String newadler = adler.replaceAll(" ", "%20");
+            Log.d("ERRORORORROR",""+newadler);
+           // URL sourceUrl = new URL(temp);
+            Log.d("ERROROROROROR",""+adler);
+            String append = ApiName.MUSICGRAPH_ARTIST + "" + album;
+            JsonObjectRequest jsonRequest = new JsonObjectRequest
+                    (Request.Method.GET, newadler, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // the response is already constructed as a JSONObject!
+                            try {
+                                JSONObject resu;
+                                if(response.has("data")){
+                                    Log.d("TRUE","tre");
+                                    JSONArray arr = response.getJSONArray("data");
+                                    for(int i = 0; i<arr.length();i++){
+                                        JSONObject  mov = arr.getJSONObject(i);
+                                        String genre = mov.getString("main_genre");
+                                        Log.d("VAMOS",""+mov+" "+genre);
+                                    }
+                                }
+                                response = response.getJSONObject("status");
 
-                }
-                }
-            },null);
+                               // resu = response.getJSONArray("data").getJSONObject(2);
+                               // String reu = resu.getString("id");
+                                String site = response.getString("message"),
+                                        network = response.getString("api");
+                               // System.out.println("Site: "+site+"\nNetwork: "+network+" ID "+" "+resu);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                        }
+                    });
+    //FlukeInit.getInstance().addToRequestQueue(jreq,"jreq_array_req");
+
+           // FlukeInit.getInstance().addToReqQueue(jreq, "jreq");
             Volley.newRequestQueue(getActivity()).add(jsonRequest);
 
         }
