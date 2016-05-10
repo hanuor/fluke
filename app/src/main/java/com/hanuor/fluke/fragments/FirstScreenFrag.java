@@ -6,12 +6,14 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,6 +36,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +51,10 @@ import java.util.Set;
  */
 public class FirstScreenFrag extends Fragment {
     private TextSwitcher mtextswitch;
+    String taggy = "6F19357B4D2010A10F3219E8088ADFCE";
+    String clist = "1652838268";
+
+
     String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time"};
 
     int mpos = 0;
@@ -60,6 +67,7 @@ public class FirstScreenFrag extends Fragment {
     public static final String CMDNEXT = "next";
     private RequestQueue mQueue;
     ImageView ivs;
+    ImageView artistimage;
 
 
     private void searchSong(){
@@ -115,9 +123,24 @@ public class FirstScreenFrag extends Fragment {
             String artist = intent.getStringExtra("artist");
             String album = intent.getStringExtra("album");
             String track = intent.getStringExtra("track");
-            //String ai = bundle.get("albumid");
+
+            Long ai = (Long) bundle.get("albumId");
+            Log.d("Toaster",""+ai);
+            String ais = String.valueOf(ai);
             //Long mela = Long.getLong(ai);
             if(album!=null) {
+                Cursor cursor = getActivity().managedQuery(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                        new String[] {MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ALBUM_ART},
+                        MediaStore.Audio.Albums._ID+ "=?",
+                        new String[] {String.valueOf(ais)},
+                        null);
+
+                if (cursor.moveToFirst()) {
+                    String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                   Log.d("PAther",""+path);
+                    // do whatever you need to do
+                }
+                // Log.d("INERER",res.print()) ;
                 hotswapping(artist);
             }
 
@@ -131,15 +154,17 @@ public class FirstScreenFrag extends Fragment {
         if(album!=null) {
             Log.d("resssss",""+album);
 
+
             StringBuilder m = new StringBuilder();
-            m.append(ApiName.MUSICGRAPH_ARTIST);
+            m.append(ApiName.LASTFMARTIST);
             m.append(album);
+            m.append(ApiName.LASTFMAPIFORMAT);
             String adler = m.toString();
             String newadler = adler.replaceAll(" ", "%20");
             Log.d("ERRORORORROR",""+newadler);
            // URL sourceUrl = new URL(temp);
-            Log.d("ERROROROROROR",""+adler);
-            String append = ApiName.MUSICGRAPH_ARTIST + "" + album;
+          //  Log.d("ERROROROROROR",""+adler);
+           // String append = ApiName.MUSICGRAPH_ARTIST + "" + album;
             JsonObjectRequest jsonRequest = new JsonObjectRequest
                     (Request.Method.GET, newadler, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -147,24 +172,51 @@ public class FirstScreenFrag extends Fragment {
                             // the response is already constructed as a JSONObject!
                             try {
                                 JSONObject resu;
-                                if(response.has("data")){
-                                    Log.d("TRUE","tre");
-                                    JSONArray arr = response.getJSONArray("data");
-                                    for(int i = 0; i<arr.length();i++){
-                                        JSONObject  mov = arr.getJSONObject(i);
-                                        String genre = mov.getString("main_genre");
-                                        Log.d("VAMOS",""+mov+" "+genre);
+                                resu = response.getJSONObject("results");
+                                Log.d("MEMYSELFANDI",""+resu.length());
+                                JSONObject arr = resu.getJSONObject("artistmatches");
+                                JSONArray otb = arr.getJSONArray("artist");
+                                for(int i = 0;i<otb.length();i++){
+                                    JSONObject mom = otb.getJSONObject(i);
+                                    Log.d("MYMYMY",""+mom.length());
+                                    JSONArray and = mom.getJSONArray("image");
+                                    String ads = and.getString(2);
+
+                                //    String amd = mom.getString("#text");
+                                    JSONObject amd = and.getJSONObject(3);
+
+                                    String ass = amd.getString("#text");
+                                    Log.d("MYMYMYMY",""+ass);
+                                    if(ass!=null){
+
+                                        Picasso.with(getActivity()).load(ass).into(artistimage);
+                                        break;
                                     }
+
+
                                 }
-                                response = response.getJSONObject("status");
+                                     /*
+                                if(response.has("results")){
+                                    Log.d("TRUE","tre");
+                                    JSONArray arr = response.getJSONArray("artist");
+                                    String imageurl = null;
+                                    Log.d("HEY",""+arr.length());
+
+
+                                    //Picasso.with(getActivity()).load(imageurl).into(artistimage);
+                                }else{
+                                    Log.d("HEY","JOKOKO");
+                                }
+                               */// response = response.getJSONObject("status");
 
                                // resu = response.getJSONArray("data").getJSONObject(2);
                                // String reu = resu.getString("id");
-                                String site = response.getString("message"),
-                                        network = response.getString("api");
+                               // String site = response.getString("message"),
+                                      //  network = response.getString("api");
                                // System.out.println("Site: "+site+"\nNetwork: "+network+" ID "+" "+resu);
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Log.d("MYMY",""+e);
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -174,9 +226,6 @@ public class FirstScreenFrag extends Fragment {
                             error.printStackTrace();
                         }
                     });
-    //FlukeInit.getInstance().addToRequestQueue(jreq,"jreq_array_req");
-
-           // FlukeInit.getInstance().addToReqQueue(jreq, "jreq");
             Volley.newRequestQueue(getActivity()).add(jsonRequest);
 
         }
@@ -202,7 +251,6 @@ public class FirstScreenFrag extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         searchSong();
     }
 
@@ -210,8 +258,9 @@ public class FirstScreenFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.first_screen_frag, container, false);
-       ivs = (ImageView) view.findViewById(R.id.ivs);
+      // ivs = (ImageView) view.findViewById(R.id.ivs);
         mtextswitch = (TextSwitcher) view.findViewById(R.id.textswitcher);
+        artistimage = (ImageView) view.findViewById(R.id.circleImage);
         mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
@@ -221,6 +270,8 @@ public class FirstScreenFrag extends Fragment {
                 return textView;
             }
         });
+       //
+
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
         fadeIn.setDuration(2000);

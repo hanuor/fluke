@@ -26,10 +26,10 @@ public class FlukeInit extends Application {
 
     private RequestQueue mRequestQueue;
     private static FlukeInit mInstance;
-
     @Override
     public void onCreate() {
         super.onCreate();
+
         App42API.initialize(this, "31fe046a4bba23fbeb15c63ab0dc976ba035b7bda880a79246fc002a2efd5843", "13b404947b35ce97ba546d6539914dcf262ea967ec20fecdfc72e2532c5cfe4a");
         FacebookSdk.sdkInitialize(this);
         mInstance = this;
