@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        >
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/apiQuota"
+            android:layout_gravity="right"
+            android:text="Quota"
+            android:layout_marginRight="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </android.support.v7.widget.Toolbar>
+    <FrameLayout
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="?attr/colorPrimary"
+        >
+
+    </FrameLayout>
+
+    <com.quinny898.library.persistentsearch.SearchBox
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_width="wrap_content"
+        android:id="@+id/searchbox"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
+
+
+    <ListView
+
+        android:background="#ffffff"
+        android:layout_below="@id/searchbox"
+        android:layout_width="fill_parent"
+        android:dividerHeight="0dp"
+        android:divider="#00ffffff"
+        android:layout_height="fill_parent"
+        android:id="@+id/list_view"
+        />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        />
+
+    <RelativeLayout
+        android:id="@+id/tobeHidden"
+        android:layout_below="@id/searchbox"
+        android:background="?attr/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:padding="64dp"
+            android:text="To get the list of unanswered questions search a keyword/tag on the searchbox at top."
+            />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
