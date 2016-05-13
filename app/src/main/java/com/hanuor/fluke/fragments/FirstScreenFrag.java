@@ -10,11 +10,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,8 +26,10 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.Request;
@@ -37,6 +41,7 @@ import com.android.volley.toolbox.Volley;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,13 +51,16 @@ import java.io.InputStream;
 import java.util.Random;
 import java.util.Set;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Shantanu Johri on 08-05-2016.
  */
 public class FirstScreenFrag extends Fragment {
     private TextSwitcher mtextswitch;
-    String taggy = "6F19357B4D2010A10F3219E8088ADFCE";
-    String clist = "1652838268";
+    RelativeLayout cvy;
+
+    ImageView vamos;
 
 
     String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time"};
@@ -67,7 +75,7 @@ public class FirstScreenFrag extends Fragment {
     public static final String CMDNEXT = "next";
     private RequestQueue mQueue;
     ImageView ivs;
-    ImageView artistimage;
+     CircleImageView artistimage;
 
 
     private void searchSong(){
@@ -156,9 +164,9 @@ public class FirstScreenFrag extends Fragment {
 
 
             StringBuilder m = new StringBuilder();
-            m.append(ApiName.LASTFMARTIST);
+            m.append(ApiName.LASTFM_ARTIST);
             m.append(album);
-            m.append(ApiName.LASTFMAPIFORMAT);
+            m.append(ApiName.LASTFM_APIFORMAT);
             String adler = m.toString();
             String newadler = adler.replaceAll(" ", "%20");
             Log.d("ERRORORORROR",""+newadler);
@@ -188,13 +196,28 @@ public class FirstScreenFrag extends Fragment {
                                     String ass = amd.getString("#text");
                                     Log.d("MYMYMYMY",""+ass);
                                     if(ass!=null){
-
                                         Picasso.with(getActivity()).load(ass).into(artistimage);
+                                        Picasso.with(getActivity()).load(ass).into(target);
+
                                         break;
                                     }
 
 
                                 }
+                                /*if(bitmap!=null){
+
+                                    Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                                        @Override
+                                        public void onGenerated(Palette palette) {
+                                            Palette.Swatch vib =palette.getMutedSwatch();
+                                            if(vib!=null){
+                                                cvy.setBackgroundColor(vib.getBodyTextColor());
+                                            }
+
+                                        }*/
+                                   // });
+
+                               // }
                                      /*
                                 if(response.has("results")){
                                     Log.d("TRUE","tre");
@@ -231,6 +254,36 @@ public class FirstScreenFrag extends Fragment {
         }
 
     }
+    Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Toast.makeText(getActivity(), "Loaded", Toast.LENGTH_SHORT).show();
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch vibrantSwatch = palette.getMutedSwatch();
+                   // Palette.Swatch vib = palette.getLightVibrantColor(Color.LTGRAY);
+                    //if(vib!=null){
+                      //  Log.d("HERE",""+vib.getRgb());
+                        cvy.setBackgroundColor(vibrantSwatch.getRgb());
+                        vamos.setBackgroundColor(vibrantSwatch.getTitleTextColor());
+                    //}else{
+                        Toast.makeText(getActivity(), "FALSE", Toast.LENGTH_SHORT).show();
+                    //}
+                }
+            });
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    };
     private Bitmap getArtistImage(String albumid) {
         Bitmap artwork = null;
         try {
@@ -259,8 +312,10 @@ public class FirstScreenFrag extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.first_screen_frag, container, false);
       // ivs = (ImageView) view.findViewById(R.id.ivs);
+        cvy = (RelativeLayout) view.findViewById(R.id.relLayout);
+        vamos = (ImageView) view.findViewById(R.id.vamos);
         mtextswitch = (TextSwitcher) view.findViewById(R.id.textswitcher);
-        artistimage = (ImageView) view.findViewById(R.id.circleImage);
+        artistimage = (CircleImageView) view.findViewById(R.id.circleImage);
         mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {

@@ -24,7 +24,7 @@
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:background="#eceff1"
+                android:id="@+id/relLayout"
                 android:layout_height="fill_parent">
 
                 <TextView
@@ -44,14 +44,20 @@
                     android:layout_below="@+id/textView"
 
                     android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/vamos"/>
 
-
-               <ImageView
-                   android:layout_width="100dp"
-                   android:background="#212121"
+               <de.hdodenhof.circleimageview.CircleImageView
+                   android:layout_width="150dp"
+                   app:civ_border_width="2dp"
+                   app:civ_border_color="#FF000000"
                    android:id="@+id/circleImage"
                     android:layout_marginLeft="10dp"
-                   android:layout_height="100dp"
+                   android:layout_height="150dp"
                    android:layout_alignParentLeft="true"
                    android:layout_alignParentStart="true" />
                     <TextView
