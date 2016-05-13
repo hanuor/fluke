@@ -315,8 +315,8 @@ public class FirstScreenFrag extends Fragment {
                     coo.setTextColor(vibrantSwatch.getTitleTextColor());
                     cooname.setTextColor(vibrantSwatch.getTitleTextColor());
                     linesep.setBackgroundColor(vibrantSwatch.getBodyTextColor());
-                    coo.setTextColor(vibrantSwatch.getTitleTextColor());
-                    cooname.setTextColor(vibrantSwatch.getTitleTextColor());
+                    genrename.setTextColor(vibrantSwatch.getTitleTextColor());
+                    genre.setTextColor(vibrantSwatch.getTitleTextColor());
                         if(oldback == 0 && oldtext == 0){
                             ValueAnimator colorAnimati = ValueAnimator.ofObject(new ArgbEvaluator(), Color.parseColor("#B0BEC5"), oldt);
                             colorAnimati.setDuration(2500); // milliseconds
