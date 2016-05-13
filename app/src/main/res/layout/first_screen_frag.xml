@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="match_parent"
 
+
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -12,36 +13,17 @@
         android:background="#eceff1"
         android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android" >
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_view"
-            android:layout_gravity="center"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:background="#ECEFF1"
-            android:layout_margin="7dp"
-            card_view:cardElevation="20dp"
-            card_view:cardCornerRadius="7dp">
 
             <RelativeLayout
+                android:fitsSystemWindows="true"
                 android:layout_width="fill_parent"
+                android:layout_marginTop="24dp"
                 android:id="@+id/relLayout"
                 android:layout_height="fill_parent">
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="#212121"
-                    android:layout_marginBottom="7dp"
-                    android:padding="5dp"
-                    android:text="Playing now..."
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" />
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_below="@+id/textView"
+
 
                     android:layout_height="match_parent">
                 <ImageView
@@ -54,55 +36,66 @@
                <de.hdodenhof.circleimageview.CircleImageView
                    android:layout_width="150dp"
                    app:civ_border_width="2dp"
-                   app:civ_border_color="#FF000000"
+                   app:civ_border_color="#ffffff"
                    android:id="@+id/circleImage"
                     android:layout_marginLeft="10dp"
+
+                   android:layout_marginTop="11dp"
                    android:layout_height="150dp"
+                   android:src="#212121"
                    android:layout_alignParentLeft="true"
-                   android:layout_alignParentStart="true" />
+                   android:layout_alignParentStart="true" >
+
+               </de.hdodenhof.circleimageview.CircleImageView>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:layout_marginLeft="3dp"
+                        android:layout_marginTop="11dp"
                         android:text="Year"
                         android:textColor="#212121"
-                        android:layout_alignParentTop="true"
+                        android:layout_below="@+id/songnotloaded"
                         android:layout_toRightOf="@+id/circleImage"
                         android:layout_toEndOf="@+id/circleImage" />
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="VAMAMAMAMA"
+    android:id="@+id/musica"/>
+                    <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/songnotloaded"
+                    android:layout_height="match_parent"
+                        android:padding="16dp"
+                        android:visibility="gone"
+                    android:background="#ECEFF1"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true">
+                        <com.github.ybq.android.spinkit.SpinKitView
+                            android:padding="3dp"
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/spin_kit"
+                            style="@style/SpinKitView.Large.CubeGrid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            app:SpinKit_Color="#B0BEC5"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true" />
+                    <TextSwitcher
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textswitcher"
+                        android:layout_below="@+id/spin_kit">
+                    </TextSwitcher>
+                    </RelativeLayout>
                 </RelativeLayout>
 
 
             </RelativeLayout>
-        </android.support.v7.widget.CardView>
   </RelativeLayout>
-    <RelativeLayout
-    android:layout_width="match_parent"
-    android:id="@+id/songnotloaded"
-    android:layout_height="match_parent"
-    android:layout_centerInParent="true"
-    android:padding="16dp"
-        android:visibility="gone"
-    android:background="#ECEFF1"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:padding="3dp"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.CubeGrid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-
-            app:SpinKit_Color="#B0BEC5"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-    <TextSwitcher
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textswitcher"
-        android:layout_below="@+id/spin_kit">
-    </TextSwitcher>
-    </RelativeLayout>
-    </RelativeLayout>
+</RelativeLayout>
 

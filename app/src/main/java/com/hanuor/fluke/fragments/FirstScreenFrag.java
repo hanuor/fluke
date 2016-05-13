@@ -1,5 +1,7 @@
 package com.hanuor.fluke.fragments;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -29,7 +31,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.Request;
@@ -59,10 +60,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class FirstScreenFrag extends Fragment {
     private TextSwitcher mtextswitch;
     RelativeLayout cvy;
+    RelativeLayout songLoaded;
 
+
+    RelativeLayout songNotLoaded;
     ImageView vamos;
+    TextView musica;
 
-
+    int oldback, oldtext;
     String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time"};
 
     int mpos = 0;
@@ -149,24 +154,30 @@ public class FirstScreenFrag extends Fragment {
                     // do whatever you need to do
                 }
                 // Log.d("INERER",res.print()) ;
-                hotswapping(artist);
+                hotswapping(artist, track);
             }
 
-            Log.d("Music",artist+":"+album+":"+track+"ablum id"+" "+bundle.get("albumId"));
+            Log.d("Music",artist+":"+album+":     SADASDASDA  "+track+"ablum id"+" "+bundle.get("albumId"));
            // iv.setText("Music"+artist+":"+album+":"+track);
 
         }
     };
 
-    private void hotswapping(String album) {
+    private void hotswapping(String album, String track) {
         if(album!=null) {
-            Log.d("resssss",""+album);
-
-
+            songLoaded.setVisibility(View.VISIBLE);
+            songNotLoaded.setVisibility(View.INVISIBLE);
             StringBuilder m = new StringBuilder();
             m.append(ApiName.LASTFM_ARTIST);
             m.append(album);
             m.append(ApiName.LASTFM_APIFORMAT);
+            StringBuilder ck = new StringBuilder();
+            ck.append(ApiName.LASTFM_TRACKINFO);
+            ck.append(""+album+"&");
+            ck.append(""+"track="+track+"&format=json");
+            String meso = ck.toString();
+            String newmeso = meso.replaceAll(" ", "%20");
+
             String adler = m.toString();
             String newadler = adler.replaceAll(" ", "%20");
             Log.d("ERRORORORROR",""+newadler);
@@ -174,13 +185,26 @@ public class FirstScreenFrag extends Fragment {
           //  Log.d("ERROROROROROR",""+adler);
            // String append = ApiName.MUSICGRAPH_ARTIST + "" + album;
             JsonObjectRequest jsonRequest = new JsonObjectRequest
-                    (Request.Method.GET, newadler, null, new Response.Listener<JSONObject>() {
+                    (Request.Method.GET, newmeso, null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             // the response is already constructed as a JSONObject!
                             try {
                                 JSONObject resu;
-                                resu = response.getJSONObject("results");
+                                resu  = response.getJSONObject("track");
+                                JSONObject resul  = resu.getJSONObject("album");
+
+                                JSONArray arry = resul.getJSONArray("image");
+                               JSONObject omk = arry.getJSONObject(3);
+
+                                String getad = omk.getString("#text");
+                                Log.d("IMAGELOAd",""+getad);
+                                artistimage.setColorFilter(Color.parseColor("#33ffffff"));
+
+                                Picasso.with(getActivity()).load(getad).into(artistimage);
+                                Picasso.with(getActivity()).load(getad).into(target);
+
+                                /*resu = response.getJSONObject("results");
                                 Log.d("MEMYSELFANDI",""+resu.length());
                                 JSONObject arr = resu.getJSONObject("artistmatches");
                                 JSONArray otb = arr.getJSONArray("artist");
@@ -196,15 +220,17 @@ public class FirstScreenFrag extends Fragment {
                                     String ass = amd.getString("#text");
                                     Log.d("MYMYMYMY",""+ass);
                                     if(ass!=null){
+
                                         Picasso.with(getActivity()).load(ass).into(artistimage);
                                         Picasso.with(getActivity()).load(ass).into(target);
-
                                         break;
-                                    }
+                                    }else{
+                                        Picasso.with(getActivity()).load(R.drawable.headset).into(target);
+                                      }
 
 
                                 }
-                                /*if(bitmap!=null){
+                                *//*if(bitmap!=null){
 
                                     Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                                         @Override
@@ -254,22 +280,62 @@ public class FirstScreenFrag extends Fragment {
         }
 
     }
+    Target imageload = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    };
     Target target = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            Toast.makeText(getActivity(), "Loaded", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getActivity(), "Loaded", Toast.LENGTH_SHORT).show();
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(Palette palette) {
                     Palette.Swatch vibrantSwatch = palette.getMutedSwatch();
-                   // Palette.Swatch vib = palette.getLightVibrantColor(Color.LTGRAY);
-                    //if(vib!=null){
-                      //  Log.d("HERE",""+vib.getRgb());
-                        cvy.setBackgroundColor(vibrantSwatch.getRgb());
+                    int oldc =vibrantSwatch.getRgb();
+                    int oldt = vibrantSwatch.getTitleTextColor();
+                        if(oldback == 0 && oldtext == 0){
+                            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), Color.parseColor("#eeeeee"), oldc);
+                            colorAnimation.setDuration(2500); // milliseconds
+                            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                    songLoaded.setBackgroundColor((int) valueAnimator.getAnimatedValue());
+                                }
+                            });
+                            colorAnimation.start();
+
+                            handlecolorvalue(oldc, oldt);
+                        }else{
+                            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), oldback, oldc);
+                            colorAnimation.setDuration(2500); // milliseconds
+                            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                    songLoaded.setBackgroundColor((int) valueAnimator.getAnimatedValue());
+                                }
+                            });
+                            colorAnimation.start();
+                            handlecolorvalue(oldc,oldt);
+
+
+
+                        }
                         vamos.setBackgroundColor(vibrantSwatch.getTitleTextColor());
-                    //}else{
-                        Toast.makeText(getActivity(), "FALSE", Toast.LENGTH_SHORT).show();
-                    //}
+                        //Toast.makeText(getActivity(), "FALSE", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
@@ -284,6 +350,13 @@ public class FirstScreenFrag extends Fragment {
 
         }
     };
+
+    private void handlecolorvalue(int oldyc, int oldyt) {
+        oldback = oldyc;
+        oldtext = oldyt;
+
+    }
+
     private Bitmap getArtistImage(String albumid) {
         Bitmap artwork = null;
         try {
@@ -313,6 +386,9 @@ public class FirstScreenFrag extends Fragment {
         View view = inflater.inflate(R.layout.first_screen_frag, container, false);
       // ivs = (ImageView) view.findViewById(R.id.ivs);
         cvy = (RelativeLayout) view.findViewById(R.id.relLayout);
+        songLoaded = (RelativeLayout) view.findViewById(R.id.songloaded);
+        songNotLoaded = (RelativeLayout) view.findViewById(R.id.songnotloaded);
+        musica = (TextView) view.findViewById(R.id.musica);
         vamos = (ImageView) view.findViewById(R.id.vamos);
         mtextswitch = (TextSwitcher) view.findViewById(R.id.textswitcher);
         artistimage = (CircleImageView) view.findViewById(R.id.circleImage);
