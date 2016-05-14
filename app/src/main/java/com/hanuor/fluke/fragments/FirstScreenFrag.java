@@ -423,6 +423,12 @@ public class FirstScreenFrag extends Fragment {
         bottom_desc = (LinearLayout) view.findViewById(R.id.bottom_desc);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_action_slideshare_logo);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         /*mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {

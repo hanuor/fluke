@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.hanuor.fluke.fragments.FirstScreenFrag;
+import com.hanuor.fluke.fragments.SecondScreenFrag;
 
 /**
  * Created by Shantanu Johri on 08-05-2016.
@@ -19,6 +20,10 @@ public class ToolbarViewPager extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return new FirstScreenFrag();
+
+            case 1:
+                return new SecondScreenFrag();
+
             default:
                 return new FirstScreenFrag();
         }

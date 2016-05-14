@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,7 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -30,7 +31,9 @@ import com.facebook.login.widget.LoginButton;
 import com.hanuor.fluke.R;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
-import com.shephertz.app42.paas.sdk.android.upload.Upload;
+import com.shephertz.app42.paas.sdk.android.App42Response;
+import com.shephertz.app42.paas.sdk.android.social.Social;
+import com.shephertz.app42.paas.sdk.android.social.SocialService;
 import com.shephertz.app42.paas.sdk.android.upload.UploadFileType;
 import com.shephertz.app42.paas.sdk.android.upload.UploadService;
 import com.shephertz.app42.paas.sdk.android.user.UserService;
@@ -46,8 +49,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     UploadService upservice;
     UserService us;
     Button b2;
+
+    SocialService msocialserice;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     //User user;
@@ -75,10 +78,15 @@ public class MainActivity extends AppCompatActivity {
         verifyStoragePermissions(this);
 
         us = App42API.buildUserService();
+        msocialserice = App42API.buildSocialService();
         upservice = App42API.buildUploadService();
         mcallbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_main);
+        Profile mcheck = Profile.getCurrentProfile();
+        if(mcheck!=null){
+            Toast.makeText(MainActivity.this, "You can now move to the new screen", Toast.LENGTH_SHORT).show();
+        }
         fblogin = (LoginButton) findViewById(R.id.login_button);
         remove = (Button) findViewById(R.id.remove);
         tv = (TextView) findViewById(R.id.tv);
@@ -96,27 +104,54 @@ public class MainActivity extends AppCompatActivity {
         });
          fblogin.setReadPermissions(Arrays.asList(
                  "public_profile", "email", "user_birthday", "user_friends"));
+
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent ac = new Intent();
+                ac.setClass(MainActivity.this,FragHandler.class);
+                startActivity(ac);
                          }
         });
+
         fblogin.registerCallback(mcallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
                 Log.d("facebookresult",""+loginResult);
+
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(final JSONObject object, GraphResponse response) {
 
                                 try {
+                                    AccessToken tokel = AccessToken.getCurrentAccessToken();
+
+                                    if(tokel!=null){
+                                        String userID = object.getString("id");
+                                        msocialserice.linkUserFacebookAccount(userID, tokel.getToken(), new App42CallBack() {
+                                            @Override
+                                            public void onSuccess(Object o) {
+                                                Social social = (Social) o;
+                                                Log.d("APP42and",""+social.getUserName());
+
+
+                                                Log.d("APP42",""+social.getFacebookProfile().picture);
+                                             }
+
+                                            @Override
+                                            public void onException(Exception e) {
+
+                                            }
+                                        });
+                                    }
                                     tv.setText("Hi, " + object.getString("name")+" , "+object.optString("id"));
                                     String mFullname = object.getString("name");
                                     String userID = object.getString("id");
                                     String email = object.getString("email");
                                     String birthday = object.getString("birthday");
+
                                     if(email!=null) {
                                         us.createUser(userID, mFullname, email, new App42CallBack() {
                                             @Override
@@ -138,12 +173,12 @@ public class MainActivity extends AppCompatActivity {
                                 final String uid = object.optString("id");
                                 userid = object.optString("id");
                                 String rem = "https://graph.facebook.com/" + uid+ "/picture?type=large";
-                                Picasso.with(MainActivity.this)
+                               /* Picasso.with(MainActivity.this)
                                         .load("https://graph.facebook.com/" + uid+ "/picture?type=large")
                                         .into(iv);
-
+*/
                                 uploadProfilePicture(userid,rem);
-                                Thread thread = new Thread(new Runnable() {
+                               /* Thread thread = new Thread(new Runnable() {
                                     @Override
                                     public void run() {
 
@@ -175,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 });
                                 thread.start();
-
+*/
 
                             }
                         });
@@ -208,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
         };
         mProfileT.startTracking();
 
+/*
 
 
                 upservice.getFileByUser("xyz.jpg", "XYZ", new App42CallBack() {
@@ -224,10 +260,15 @@ public class MainActivity extends AppCompatActivity {
 
                             //imageup(urlo);
                             Log.d("LOLL", "" + fileList.get(i).getUrl());
+                            new com.hanuor.fluke.launcher.DownloadImageTask(ivd).execute(fileList.get(i).getUrl());
+*/
+/*
+                            new com.hanuor.fluke.imageutils.D
                             new DownloadImageTask((ImageView) findViewById(R.id.ivd))
                                     .execute(fileList.get(i).getUrl());
 
-                            //tv.setText(""+urlo);
+                            *//*
+//tv.setText(""+urlo);
                         }
 
                     }
@@ -239,13 +280,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+*/
 
-        Log.d("AURA",""+aura);
-        Picasso.with(MainActivity.this)
-                .load(aura)
-                .into(ivd);
+
 
     }
+
 
     private void uploadProfilePicture(String userid,String url) {
         Picasso.with(MainActivity.this).load(url).into(target);
@@ -304,7 +344,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             Log.v("check",""+s+""+userid);
-            upservice.uploadFileForUser(userid+".jpg", userid, s, UploadFileType.IMAGE, "User " + userid + " Image", new App42CallBack() {
+            //Every time a user logs in ..replace the pic with a new one
+            upservice.removeFileByName(userid+".jpg", new App42CallBack() {
+                public void onSuccess(Object response)
+                {
+                    App42Response app42response = (App42Response)response;
+                    System.out.println("response is " + app42response) ;
+                }
+                public void onException(Exception ex)
+                {
+                    System.out.println("Exception Message"+ex.getMessage());
+                }
+            });
+
+
+            upservice.uploadFile(userid + ".jpg", s, UploadFileType.IMAGE, "Image for this user" + userid, new App42CallBack() {
                 @Override
                 public void onSuccess(Object o) {
                     Log.d("Up","loaded");
@@ -331,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
                     Environment.getExternalStorageDirectory().getPath()
                             + "/fluke");
             fm.mkdirs();
-            File file = new File(fm, "INGS.jpg");
+            File file = new File(fm, userid+".jpg");
             Log.d("Runtastic", "GOa" +
                     file.getPath());
             fPath = file.getAbsolutePath();
@@ -353,31 +407,6 @@ public class MainActivity extends AppCompatActivity {
             return fPath;
         }
     }
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
-
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE

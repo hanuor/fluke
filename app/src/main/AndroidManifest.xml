@@ -10,7 +10,9 @@
     <application
         android:name="com.hanuor.fluke.init.FlukeInit"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:replace="android:icon"
+        android:icon="@mipmap/lof"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -20,14 +22,14 @@
 
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".launcher.FragHandler">
+        <activity android:name=".launcher.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".launcher.MainActivity"/>
+        <activity android:name=".launcher.FragHandler"/>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"

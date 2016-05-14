@@ -1,4 +1,4 @@
-package com.hanuor.fluke.launcher;
+package com.hanuor.fluke.imageutils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
