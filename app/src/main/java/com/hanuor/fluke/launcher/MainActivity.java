@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent ac = new Intent();
-                ac.setClass(MainActivity.this,TestAct.class);
+                ac.setClass(MainActivity.this,FragHandler.class);
                 startActivity(ac);
 
             }

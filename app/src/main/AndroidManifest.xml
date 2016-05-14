@@ -20,7 +20,7 @@
 
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".launcher.TestAct">
+        <activity android:name=".launcher.FragHandler">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

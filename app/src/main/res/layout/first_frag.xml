@@ -129,6 +129,13 @@
     android:layout_marginLeft="3dp"
     android:textStyle="italic"
     android:layout_toRightOf="@+id/genre"/>
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_margin="7dp"
+                android:id="@+id/fab"
+                android:layout_alignParentBottom="true"/>
 
         </RelativeLayout>
     </LinearLayout>

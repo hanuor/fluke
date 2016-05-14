@@ -16,11 +16,11 @@ import com.hanuor.fluke.adapters.ToolbarViewPager;
 /**
  * Created by Shantanu Johri on 07-05-2016.
  */
-public class TestAct extends AppCompatActivity {
+public class FragHandler extends AppCompatActivity {
     Toolbar toolbar;
 
     TextView iv;
-    int ico[] = {R.drawable.ic_stat_music_search};
+    int ico[] = {R.drawable.ic_stat_music_search,R.drawable.ic_action_slideshare_logo};
 
 
     SpinKitView spinKitView;
@@ -42,7 +42,7 @@ public class TestAct extends AppCompatActivity {
         viewPager.setAdapter(new ToolbarViewPager(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(ico[0]);
-        tabLayout.getTabAt(1).setIcon(ico[0]);
+        tabLayout.getTabAt(1).setIcon(ico[1]);
         tabLayout.getTabAt(2).setIcon(ico[0]);
         tabLayout.getTabAt(3).setIcon(ico[0]);
 

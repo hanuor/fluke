@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
@@ -55,6 +56,7 @@ public class FirstScreenFrag extends Fragment {
     TextView linesep;
     TextView genre, genrename;
     TextView coo, cooname;
+    FloatingActionButton fab;
     int oldback = 0, oldtext = 0;
     String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time"};
     LinearLayout bottom_desc;
@@ -419,6 +421,8 @@ public class FirstScreenFrag extends Fragment {
         linesep = (TextView) view.findViewById(R.id.lineseparator);
         artistImage = (CircleImageView) view.findViewById(R.id.artistImage);
         bottom_desc = (LinearLayout) view.findViewById(R.id.bottom_desc);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setImageResource(R.drawable.ic_action_slideshare_logo);
         /*mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
