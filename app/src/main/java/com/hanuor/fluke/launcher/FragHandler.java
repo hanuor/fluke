@@ -35,7 +35,6 @@ public class FragHandler extends AppCompatActivity {
        // spinKitView = (SpinKitView) findViewById(R.id.spin_kit);
         //FoldingCube fc = new FoldingCube();
         //CubeGrid cb = new CubeGrid();
-        iv = (TextView) findViewById(R.id.tv);
         //spinKitView.setIndeterminateDrawable(cb);
         viewPager.setAdapter(new ToolbarViewPager(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);

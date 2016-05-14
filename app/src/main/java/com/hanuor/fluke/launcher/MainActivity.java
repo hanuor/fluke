@@ -12,11 +12,7 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -44,29 +40,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     LoginButton fblogin;
-    TextView tv;
+
     CallbackManager mcallbackManager;
     ProfileTracker mProfileT;
-    ImageView iv;
-    Button remove;
-    FileInputStream fin;
-    InputStream is;
-    ImageView ivd;
+
     String userid;
     String fPath;
-    String aura;
     UploadService upservice;
     UserService us;
-    Button b2;
+
 
     SocialService msocialserice;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -85,34 +74,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Profile mcheck = Profile.getCurrentProfile();
         if(mcheck!=null){
-            Toast.makeText(MainActivity.this, "You can now move to the new screen", Toast.LENGTH_SHORT).show();
+            Intent mac = new Intent();
+            mac.setClass(MainActivity.this, FragHandler.class);
+            startActivity(mac);
         }
         fblogin = (LoginButton) findViewById(R.id.login_button);
-        remove = (Button) findViewById(R.id.remove);
-        tv = (TextView) findViewById(R.id.tv);
-        iv = (ImageView) findViewById(R.id.iv);
-        ivd = (ImageView) findViewById(R.id.ivd);
-        b2 = (Button) findViewById(R.id.b2);
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent ac = new Intent();
-                ac.setClass(MainActivity.this,FragHandler.class);
-                startActivity(ac);
-
-            }
-        });
          fblogin.setReadPermissions(Arrays.asList(
                  "public_profile", "email", "user_birthday", "user_friends"));
 
-        remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent ac = new Intent();
-                ac.setClass(MainActivity.this,FragHandler.class);
-                startActivity(ac);
-                         }
-        });
 
         fblogin.registerCallback(mcallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -146,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         });
                                     }
-                                    tv.setText("Hi, " + object.getString("name")+" , "+object.optString("id"));
+                                   // tv.setText("Hi, " + object.getString("name")+" , "+object.optString("id"));
                                     String mFullname = object.getString("name");
                                     String userID = object.getString("id");
                                     String email = object.getString("email");
@@ -173,46 +142,8 @@ public class MainActivity extends AppCompatActivity {
                                 final String uid = object.optString("id");
                                 userid = object.optString("id");
                                 String rem = "https://graph.facebook.com/" + uid+ "/picture?type=large";
-                               /* Picasso.with(MainActivity.this)
-                                        .load("https://graph.facebook.com/" + uid+ "/picture?type=large")
-                                        .into(iv);
-*/
                                 uploadProfilePicture(userid,rem);
-                               /* Thread thread = new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        try {
-                                            userid = object.optString("id");
-                                            Log.v("Id",""+userid);
-
-                                            InputStream ism =  new URL("https://graph.facebook.com/" + userid + "/picture?type=large").openStream();
-                                           // is = new URL("https://graph.facebook.com/" + uid + "/picture?type=large").openStream();
-                                            upservice.uploadFileForUser("abc1.jpg","ABC", "https://graph.facebook.com/" + userid + "/picture?type=large", UploadFileType.IMAGE, "balsh", new App42CallBack() {
-                                                @Override
-                                                public void onSuccess(Object o) {
-                                                    Log.v("Response",""+o.toString());
-                                                  //  Toast.makeText(MainActivity.this, "Boom!", Toast.LENGTH_SHORT).show();
-                                                }
-
-                                                @Override
-                                                public void onException(Exception e) {
-
-                                                    Log.v("Response",""+e);
-                                                   // Toast.makeText(MainActivity.this, ""+e, Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                });
-                                thread.start();
-*/
-
-                            }
+                             }
                         });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,name,email,gender, birthday");
@@ -238,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
 
-                tv.setText(""+currentProfile.getName());
+               // tv.setText(""+currentProfile.getName());
             }
         };
         mProfileT.startTracking();
