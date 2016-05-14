@@ -32,8 +32,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
+import com.hanuor.fluke.database.FlukeApp42Database;
+import com.shephertz.app42.paas.sdk.android.App42API;
+import com.shephertz.app42.paas.sdk.android.App42CallBack;
+import com.shephertz.app42.paas.sdk.android.storage.StorageService;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -57,7 +62,9 @@ public class FirstScreenFrag extends Fragment {
     TextView genre, genrename;
     TextView coo, cooname;
     FloatingActionButton fab;
+    AccessToken otken;
     int oldback = 0, oldtext = 0;
+    public String playingnow_song = null, playingnow_artist = null;
     String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time"};
     LinearLayout bottom_desc;
     CircleImageView artistImage;
@@ -134,6 +141,8 @@ public class FirstScreenFrag extends Fragment {
                     // do whatever you need to do
                 }
                 // Log.d("INERER",res.print()) ;
+                playingnow_song = track;
+                playingnow_artist = artist;
                 hotswapping(artist, track);
             }
 
@@ -288,22 +297,6 @@ public class FirstScreenFrag extends Fragment {
         }
 
     }
-    Target imageload = new Target() {
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-        }
-    };
     Target targetq = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -409,6 +402,8 @@ public class FirstScreenFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.first_frag, container, false);
+        otken = AccessToken.getCurrentAccessToken();
+        final String UID = otken.getUserId();
         // ivs = (ImageView) view.findViewById(R.id.ivs);
         coverImage = (ImageView) view.findViewById(R.id.coverImage);
         // mtextswitch = (TextSwitcher) view.findViewById(R.id.textswitcher);
@@ -421,11 +416,30 @@ public class FirstScreenFrag extends Fragment {
         linesep = (TextView) view.findViewById(R.id.lineseparator);
         artistImage = (CircleImageView) view.findViewById(R.id.artistImage);
         bottom_desc = (LinearLayout) view.findViewById(R.id.bottom_desc);
+
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_action_slideshare_logo);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String collection_name = UID;
+                StringBuilder vs = new StringBuilder();
+
+                vs.append(FlukeApp42Database.jsontrack+""+playingnow_song+""+FlukeApp42Database.jsonid+""+UID+FlukeApp42Database.jsonartisit+playingnow_artist+""+FlukeApp42Database.jsonend);
+
+
+                StorageService ss = App42API.buildStorageService();
+                ss.insertJSONDocument(FlukeApp42Database.database, collection_name, vs.toString(), new App42CallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.d("DoneY","VAMOS");
+                    }
+
+                    @Override
+                    public void onException(Exception e) {
+                        Log.d("DoneY",""+e);
+                    }
+                });
 
             }
         });

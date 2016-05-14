@@ -74,12 +74,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Profile mcheck = Profile.getCurrentProfile();
         if(mcheck!=null){
+            AccessToken token = AccessToken.getCurrentAccessToken();
+            Log.d("UID",token.getUserId());
             Intent mac = new Intent();
             mac.setClass(MainActivity.this, FragHandler.class);
+            mac.putExtra("FacebookId",token.getUserId());
             startActivity(mac);
+
         }
         fblogin = (LoginButton) findViewById(R.id.login_button);
-         fblogin.setReadPermissions(Arrays.asList(
+        fblogin.setReadPermissions(Arrays.asList(
                  "public_profile", "email", "user_birthday", "user_friends"));
 
 
