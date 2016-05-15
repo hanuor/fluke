@@ -1,5 +1,6 @@
 package com.hanuor.fluke.database;
 
+import com.facebook.AccessToken;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.storage.StorageService;
 
@@ -14,6 +15,6 @@ public class FlukeApp42Database {
     public static final String jsonend = "\"}";
     public static final String datacollectionId = "1281537931875901";
     public static final StorageService ss = App42API.buildStorageService();
-
+    public static final String UserID = AccessToken.getCurrentAccessToken().getUserId();
 
 }

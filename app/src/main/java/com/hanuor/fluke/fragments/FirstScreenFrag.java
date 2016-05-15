@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
@@ -35,11 +36,10 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
+import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
-import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
-import com.shephertz.app42.paas.sdk.android.storage.StorageService;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -75,26 +75,9 @@ public class FirstScreenFrag extends Fragment {
 
 
     private void searchSong(){
-        IntentFilter iF = new IntentFilter();
-        iF.addAction("com.android.music.playstatechanged");
-        iF.addAction("com.android.music.playbackcomplete");
-        iF.addAction("com.android.music.queuechanged");
-        iF.addAction("com.android.music.metachanged");
-
-        iF.addAction("com.htc.music.metachanged");
-
-        iF.addAction("fm.last.android.metachanged");
-        iF.addAction("com.sec.android.app.music.metachanged");
-        iF.addAction("com.nullsoft.winamp.metachanged");
-        iF.addAction("com.amazon.mp3.metachanged");
-        iF.addAction("com.miui.player.metachanged");
-        iF.addAction("com.real.IMP.metachanged");
-        iF.addAction("com.sonyericsson.music.metachanged");
-        iF.addAction("com.rdio.android.metachanged");
-        iF.addAction("com.samsung.sec.android.MusicPlayer.metachanged");
-        iF.addAction("com.andrew.apollo.metachanged");
-
-        getActivity().registerReceiver(mReceiver, iF);
+        MusicHits mh = new MusicHits();
+        IntentFilter ifla = mh.searchsong();
+        getActivity().registerReceiver(mReceiver, ifla);
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -155,6 +138,19 @@ public class FirstScreenFrag extends Fragment {
 
         }
     };
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState!=null){
+
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
     private void hotswapping(String album, String track) {
         if(album!=null) {
@@ -399,6 +395,7 @@ public class FirstScreenFrag extends Fragment {
 @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    setRetainInstance(true);
         searchSong();
     }
 
@@ -431,10 +428,9 @@ public class FirstScreenFrag extends Fragment {
                 final StringBuilder vs = new StringBuilder();
                 vs.append(FlukeApp42Database.jsontrack+""+playingnow_song+""+FlukeApp42Database.jsonid+""+UID+FlukeApp42Database.jsonartisit+playingnow_artist+""+FlukeApp42Database.jsonend);
 
-                final StorageService ss = App42API.buildStorageService();
 
 
-                                ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
+                                FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
                                     @Override
                                     public void onSuccess(Object o) {
                                         Log.d("Success",""+o.toString());
@@ -454,7 +450,7 @@ public class FirstScreenFrag extends Fragment {
                                                     Log.d("TOTLA","India");
                                                     String DOCid = jsonDocList.get(i).getDocId();
                                                     final int finalI = i;
-                                                    ss.deleteDocumentById(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, DOCid, new App42CallBack() {
+                                                    FlukeApp42Database.ss.deleteDocumentById(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, DOCid, new App42CallBack() {
                                                         @Override
                                                         public void onSuccess(Object o) {
                                                             Log.d("DeletedI","Success");
@@ -480,7 +476,7 @@ public class FirstScreenFrag extends Fragment {
                                         }
                                         if(insert_flag == 1){
                                             Log.d("TOTLA","insertis");
-                                            ss.insertJSONDocument(FlukeApp42Database.database,FlukeApp42Database.datacollectionId, vs.toString(), new App42CallBack() {
+                                            FlukeApp42Database.ss.insertJSONDocument(FlukeApp42Database.database,FlukeApp42Database.datacollectionId, vs.toString(), new App42CallBack() {
                                                 @Override
                                                 public void onSuccess(Object o) {
                                                     Log.d("DoneY","VAMOS");

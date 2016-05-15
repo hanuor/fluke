@@ -3,6 +3,7 @@ package com.hanuor.fluke.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import com.hanuor.fluke.fragments.FirstScreenFrag;
 import com.hanuor.fluke.fragments.SecondScreenFrag;
@@ -27,6 +28,11 @@ public class ToolbarViewPager extends FragmentPagerAdapter {
             default:
                 return new FirstScreenFrag();
         }
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+
     }
 
     @Override
