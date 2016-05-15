@@ -150,6 +150,7 @@ public class FirstScreenFrag extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+//        mReceiver.abortBroadcast();
     }
 
     private void hotswapping(String album, String track) {

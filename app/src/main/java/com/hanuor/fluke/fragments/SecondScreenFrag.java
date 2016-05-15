@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +19,7 @@ import com.andtinder.view.CardContainer;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
+import com.hanuor.fluke.serverhandler.ServerTasker;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
 
@@ -31,8 +31,8 @@ import java.util.Set;
 public class SecondScreenFrag extends Fragment {
     CardContainer mcardContainer;
     int checkoir;
-    Handler mHandler;
-
+    ArrayList<String> mIdstore;
+    ArrayList<String> mfinalStore;
 
     @Nullable
     @Override
@@ -40,6 +40,8 @@ public class SecondScreenFrag extends Fragment {
         View view = inflater.inflate(R.layout.fragment_second_screen, container, false);
 
         mcardContainer = (CardContainer) view.findViewById(R.id.layoutview);
+        mIdstore = new ArrayList<String>();
+        mfinalStore = new ArrayList<String>();
         checkoir = 0;
         MusicHits mah = new MusicHits();
         IntentFilter ifco = mah.searchsong();
@@ -81,13 +83,14 @@ public class SecondScreenFrag extends Fragment {
                 }
                 //Do here what you want to do
             }
-
             fetchMatchingSuff(track);
             Log.d("Music",artist+":"+album+":     SADASDASDA  "+track+"ablum id"+" "+bundle.get("albumId"));
         }
     };
             private void fetchMatchingSuff(final String track) {
 
+                ServerTasker s = new ServerTasker(getActivity());
+                s.execute();
                                 FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
                                     @Override
                                     public void onSuccess(Object o) {
@@ -102,24 +105,23 @@ public class SecondScreenFrag extends Fragment {
                                                 Log.d("TOTL", "" + id);
                                                 String trackJSON = jsonObject.getString("track");
                                                 Log.d("Pinging Server","T");
-
                                                 if(track.contentEquals(trackJSON)){
                                                     if(id.contentEquals(FlukeApp42Database.UserID)){
-
-                                                        fetchMatchingSuff(track);
-                                                        Log.d("Pingin","YEs"+track);
-                                                        //pingo.interrupt();
-                                                       // updateUI();
-                                                        // Log.d("")
+                                                        mIdstore.add(id);
+                                                        Log.d("Pingin","YEs"+track+" "+mIdstore.size());
+                                                       // updateUIS(mIdstore);
+                                                        //fetchMatchingSuff(track);
+                                                        //Make an array of ids
                                                     }
                                                     else{
+                                                        //pinging the server again
                                                         fetchMatchingSuff(track);
                                                     }
                                                 }
                                             } catch (Exception e) {
-
                                             }
                                         }
+                                       // updateUIS(mIdstore);
                                     }
 
 
@@ -129,20 +131,27 @@ public class SecondScreenFrag extends Fragment {
 
                                     }
                                 });
+                if (mfinalStore!=null){
+                    Toast.makeText(getActivity(), " V "+mfinalStore.size()+"   V" + mIdstore.size(), Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getActivity(), ""+mfinalStore.size(), Toast.LENGTH_SHORT).show();
+                }
+
+  }
 
 
+    @Override
+    public void onPause() {
+        super.onPause();
+       // onDestroy();
+    }
 
-
-
-
-
-
+    private void updateUIS(ArrayList<String> mStore) {
+        mfinalStore = mStore;
+        Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+   // fetchProfiles();
 
     }
 
-    private void updateUI() {
-        Toast.makeText(getActivity(), "Found a match!", Toast.LENGTH_SHORT).show();
-
-    }
 
 }
