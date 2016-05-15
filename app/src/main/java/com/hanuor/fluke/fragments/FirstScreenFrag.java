@@ -38,6 +38,7 @@ import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.database.FlukeApp42Database;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
+import com.shephertz.app42.paas.sdk.android.storage.Storage;
 import com.shephertz.app42.paas.sdk.android.storage.StorageService;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -46,6 +47,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -62,7 +64,9 @@ public class FirstScreenFrag extends Fragment {
     TextView genre, genrename;
     TextView coo, cooname;
     FloatingActionButton fab;
+    int insert_flag;
     AccessToken otken;
+    String Doc_id = null;
     int oldback = 0, oldtext = 0;
     public String playingnow_song = null, playingnow_artist = null;
     String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time"};
@@ -403,6 +407,7 @@ public class FirstScreenFrag extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.first_frag, container, false);
         otken = AccessToken.getCurrentAccessToken();
+        insert_flag = 0;
         final String UID = otken.getUserId();
         // ivs = (ImageView) view.findViewById(R.id.ivs);
         coverImage = (ImageView) view.findViewById(R.id.coverImage);
@@ -422,27 +427,88 @@ public class FirstScreenFrag extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String collection_name = UID;
-                StringBuilder vs = new StringBuilder();
-
+                final String collection_name = UID;
+                final StringBuilder vs = new StringBuilder();
                 vs.append(FlukeApp42Database.jsontrack+""+playingnow_song+""+FlukeApp42Database.jsonid+""+UID+FlukeApp42Database.jsonartisit+playingnow_artist+""+FlukeApp42Database.jsonend);
 
+                final StorageService ss = App42API.buildStorageService();
 
-                StorageService ss = App42API.buildStorageService();
-                ss.insertJSONDocument(FlukeApp42Database.database, collection_name, vs.toString(), new App42CallBack() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        Log.d("DoneY","VAMOS");
-                    }
 
-                    @Override
-                    public void onException(Exception e) {
-                        Log.d("DoneY",""+e);
-                    }
-                });
+                                ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
+                                    @Override
+                                    public void onSuccess(Object o) {
+                                        Log.d("Success",""+o.toString());
+                                        Storage  storage  = (Storage )o;
+                                        //This will return JSONObject list, however since Object Id is unique, list will only have one object
+                                        final ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();
+                                         int inserter_checker = 1;
+                                        for(int i=0;i<jsonDocList.size();i++) {
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
+                                                String id = jsonObject.getString("id");
+                                                Log.d("TOTL",""+id);
+                                                String track = jsonObject.getString("track");
+                                                if(id.contentEquals(UID)){
+                                                    inserter_checker = 1;
+                                                    insert_flag = 0;
+                                                    Log.d("TOTLA","India");
+                                                    String DOCid = jsonDocList.get(i).getDocId();
+                                                    final int finalI = i;
+                                                    ss.deleteDocumentById(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, DOCid, new App42CallBack() {
+                                                        @Override
+                                                        public void onSuccess(Object o) {
+                                                            Log.d("DeletedI","Success");
+                                                            inserter_meth(vs.toString(), jsonDocList.size(), finalI);
+                                                         }
 
-            }
-        });
+                                                        @Override
+                                                        public void onException(Exception e) {
+                                                            Log.d("DeletedI",""+e);
+                                                        }
+                                                    });
+                                                }else{
+                                                    insert_flag = 1;
+                                                   // break;
+
+
+
+                                                }
+                                                Log.d("Succ",""+id+" and "+track);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                        if(insert_flag == 1){
+                                            Log.d("TOTLA","insertis");
+                                            ss.insertJSONDocument(FlukeApp42Database.database,FlukeApp42Database.datacollectionId, vs.toString(), new App42CallBack() {
+                                                @Override
+                                                public void onSuccess(Object o) {
+                                                    Log.d("DoneY","VAMOS");
+
+                                                }
+
+                                                @Override
+                                                public void onException(Exception e) {
+                                                    Log.d("DoneY",""+e);
+                                                }
+                                            });
+                                            insert_flag = 0;
+
+                                        }
+                                        }
+
+                                    @Override
+                                    public void onException(Exception e) {
+                                        Log.d("SuccessNOT",""+e);
+
+                                    }
+                                });
+
+                            }
+                        });
+
+
+
         /*mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
@@ -479,5 +545,26 @@ public class FirstScreenFrag extends Fragment {
         return view;
     }*/
     return view;
+    }
+
+    private void inserter_meth(String jsonString, int total, int current) {
+        Log.d("TOTLA",""+total+" and C "+current);
+        if(total == current+1) {
+
+            FlukeApp42Database.ss.insertJSONDocument(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, jsonString, new App42CallBack() {
+                @Override
+                public void onSuccess(Object o) {
+                    Log.d("DoneY", "VAMOS");
+
+                }
+
+                @Override
+                public void onException(Exception e) {
+                    Log.d("DoneY", "" + e);
+                }
+            });
+
+        }
+
     }
 }
