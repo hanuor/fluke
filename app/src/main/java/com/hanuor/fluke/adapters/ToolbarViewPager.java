@@ -12,22 +12,26 @@ import com.hanuor.fluke.fragments.SecondScreenFrag;
  * Created by Shantanu Johri on 08-05-2016.
  */
 public class ToolbarViewPager extends FragmentPagerAdapter {
+
     public ToolbarViewPager(FragmentManager fm) {
-        super(fm);
+    super(fm);
     }
+
 
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return new FirstScreenFrag();
+            switch (position) {
+                case 0:
+                    FirstScreenFrag fS = new FirstScreenFrag();
+                    return fS;
 
-            case 1:
-                return new SecondScreenFrag();
+                case 1:
+                    return new SecondScreenFrag();
 
-            default:
-                return new FirstScreenFrag();
-        }
+                default:
+                    return new FirstScreenFrag();
+            }
+
     }
 
     @Override

@@ -10,7 +10,9 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.facebook.BuildConfig;
 import com.facebook.FacebookSdk;
+import com.facebook.LoggingBehavior;
 import com.shephertz.app42.paas.sdk.android.App42API;
 
 import java.security.MessageDigest;
@@ -32,6 +34,11 @@ public class FlukeInit extends Application {
 
         App42API.initialize(this, "31fe046a4bba23fbeb15c63ab0dc976ba035b7bda880a79246fc002a2efd5843", "13b404947b35ce97ba546d6539914dcf262ea967ec20fecdfc72e2532c5cfe4a");
         FacebookSdk.sdkInitialize(this);
+
+        if (BuildConfig.DEBUG) {
+            FacebookSdk.setIsDebugEnabled(true);
+            FacebookSdk.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+        }
         mInstance = this;
  }
 

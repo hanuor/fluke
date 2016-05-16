@@ -34,11 +34,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.google.gson.Gson;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
+import com.hanuor.fluke.gettersetters.JSONServerGS;
 import com.hanuor.fluke.launcher.MainActivity;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
@@ -80,6 +83,7 @@ public class FirstScreenFrag extends Fragment {
     MainActivity mMains = new MainActivity();
 
     JSONManager jsonManager = new JSONManager();
+    JSONServerGS jsonServerGS = new JSONServerGS();
 
     Gson gson = new Gson();
 
@@ -143,8 +147,8 @@ public class FirstScreenFrag extends Fragment {
                 playingnow_song = track;
                 song_track = track;
                 playingnow_artist = artist;
-                jsonManager.setArtist(artist);
-                jsonManager.setTrack(track);
+                jsonServerGS.setArtist(artist);
+                jsonServerGS.setTrack(track);
                 hotswapping(artist, track);
             }
 
@@ -215,7 +219,7 @@ public class FirstScreenFrag extends Fragment {
                                 String getad = omk.getString("#text");
                                 //Log.d("IMAGELOAd",""+getad);
                                 // artistimage.setColorFilter(Color.parseColor("#33ffffff"));
-
+                                jsonServerGS.setAlbumimage(getad);
                                 Picasso.with(getActivity()).load(getad).into(coverImage);
                               //  Picasso.with(getActivity()).load(getad).into(targetq);
 
@@ -259,7 +263,7 @@ public class FirstScreenFrag extends Fragment {
                                     String ass = amd.getString("#text");
                                     Log.d("MYMYMYMY",""+ass);
                                     if(ass!=null){
-                                        jsonManager.setArtistImage(ass);
+                                        jsonServerGS.setArtistimage(ass);
                                         Picasso.with(getActivity()).load(ass).into(artistImage);
                                         Picasso.with(getActivity()).load(ass).into(targetq);
                                         break;
@@ -415,17 +419,17 @@ public class FirstScreenFrag extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     setRetainInstance(true);
-        searchSong();
+    otken = AccessToken.getCurrentAccessToken();
+    getFBINFO(otken);
+
+    searchSong();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
 
         View view = inflater.inflate(R.layout.first_frag, container, false);
-        otken = AccessToken.getCurrentAccessToken();
-        String getURL = mMains.fbImage;
         insert_flag = 0;
         final String UID = otken.getUserId();
         // ivs = (ImageView) view.findViewById(R.id.ivs);
@@ -448,10 +452,17 @@ public class FirstScreenFrag extends Fragment {
             public void onClick(View view) {
                 final String collection_name = UID;
                 //final StringBuilder vs = new StringBuilder();
-                jsonManager.setArtistImage("asd");
-                jsonManager.setArtist("ds");
-                jsonManager.setEbemail("dsaaa");
-                jsonManager.setTrack("asdsx");
+                jsonManager.setArtistImage(jsonServerGS.getArtistimage());
+                jsonManager.setArtist(jsonServerGS.getArtist());
+                jsonManager.setAlbumImage(jsonServerGS.getAlbumimage());
+                jsonManager.setTrack(jsonServerGS.getTrack());
+                jsonManager.setEbemail(jsonServerGS.getEbemail());
+                jsonManager.setFbName(jsonServerGS.getFbName());
+                jsonManager.setFbUserpic(jsonServerGS.getFbUserpic());
+                Log.d("FBI JSS",""+jsonServerGS.getFbName());
+
+
+
 
                 final String jsons = gson.toJson(jsonManager,JSONManager.class);
 
@@ -571,6 +582,31 @@ public class FirstScreenFrag extends Fragment {
         return view;
     }*/
     return view;
+    }
+
+    private void getFBINFO(AccessToken otken) {
+
+        Log.d("FBI","A"+otken);
+        GraphRequest request = GraphRequest.newMeRequest(otken, new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+                try {
+                    String userid = object.optString("id");
+                    String rem = "https://graph.facebook.com/" + userid+ "/picture?type=large";
+
+                    jsonServerGS.setFbName(object.getString("name"));
+                    jsonServerGS.setEbemail(object.getString("email"));
+                    jsonServerGS.setFbUserpic(rem);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email,gender, birthday");
+        request.setParameters(parameters);
+        request.executeAsync();
+
     }
 
     private void inserter_meth(String jsonString, int total, int current) {

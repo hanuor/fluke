@@ -6,10 +6,20 @@ package com.hanuor.fluke.serverhandler;
 public class JSONManager {
     private String track;
     private String artist;
+    private String albumImage;
     private String artistImage;
     private String fbUserpic;
     private String fbName;
     private String ebemail;
+
+    public String getAlbumImage() {
+        return albumImage;
+    }
+
+    public void setAlbumImage(String albumImage) {
+        this.albumImage = albumImage;
+    }
+
 
     public String getTrack() {
         return track;
@@ -59,9 +69,9 @@ public class JSONManager {
         this.ebemail = ebemail;
     }
 
-    public String toString() {
+    /*public String toString() {
         return "[ "+fbName+", "+fbUserpic+", "+ebemail+", "+track+", "+artist+", "+artistImage+" ]";
-    }
+    */
 
 
 }

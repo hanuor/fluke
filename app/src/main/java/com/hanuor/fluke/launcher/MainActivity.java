@@ -48,7 +48,6 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     LoginButton fblogin;
-  //  Gson gson = new Gson();
     CallbackManager mcallbackManager;
     ProfileTracker mProfileT;
     JSONManager jsonManager = new JSONManager();
