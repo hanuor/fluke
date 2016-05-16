@@ -18,12 +18,7 @@ import android.widget.Toast;
 import com.andtinder.view.CardContainer;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.MusicHits;
-import com.hanuor.fluke.database.FlukeApp42Database;
 import com.hanuor.fluke.serverhandler.ServerTasker;
-import com.shephertz.app42.paas.sdk.android.App42CallBack;
-import com.shephertz.app42.paas.sdk.android.storage.Storage;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -91,7 +86,7 @@ public class SecondScreenFrag extends Fragment {
 
                 ServerTasker s = new ServerTasker(getActivity());
                 s.execute();
-                                FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
+                            /*    FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
                                     @Override
                                     public void onSuccess(Object o) {
                                         // Log.d("Success", "" + o.toString());
@@ -131,7 +126,7 @@ public class SecondScreenFrag extends Fragment {
 
                                     }
                                 });
-                if (mfinalStore!=null){
+              */  if (mfinalStore!=null){
                     Toast.makeText(getActivity(), " V "+mfinalStore.size()+"   V" + mIdstore.size(), Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getActivity(), ""+mfinalStore.size(), Toast.LENGTH_SHORT).show();

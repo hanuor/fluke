@@ -25,6 +25,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.hanuor.fluke.R;
+import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.App42Response;
@@ -47,15 +48,18 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     LoginButton fblogin;
-
+  //  Gson gson = new Gson();
     CallbackManager mcallbackManager;
     ProfileTracker mProfileT;
-
+    JSONManager jsonManager = new JSONManager();
     String userid;
     String fPath;
+    String fbEmail;
     UploadService upservice;
     UserService us;
+    public static String fbImage;
 
+    public static String fbName;
 
     SocialService msocialserice;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -79,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
             Intent mac = new Intent();
             mac.setClass(MainActivity.this, FragHandler.class);
             mac.putExtra("FacebookId",token.getUserId());
+            mac.putExtra("fbimage",fbImage);
+            mac.putExtra("fbname",fbName);
+            mac.putExtra("fbEmail",fbEmail);
+
             startActivity(mac);
 
         }
@@ -121,8 +129,12 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                    // tv.setText("Hi, " + object.getString("name")+" , "+object.optString("id"));
                                     String mFullname = object.getString("name");
+                                    fbName = mFullname;
+                                    jsonManager.setFbName(mFullname);
                                     String userID = object.getString("id");
                                     String email = object.getString("email");
+                                    fbEmail = email;
+                                    jsonManager.setEbemail(email);
                                     String birthday = object.getString("birthday");
 
                                     if(email!=null) {
@@ -146,6 +158,8 @@ public class MainActivity extends AppCompatActivity {
                                 final String uid = object.optString("id");
                                 userid = object.optString("id");
                                 String rem = "https://graph.facebook.com/" + uid+ "/picture?type=large";
+                                jsonManager.setFbUserpic(rem);
+                                fbImage = rem;
                                 uploadProfilePicture(userid,rem);
                              }
                         });

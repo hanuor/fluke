@@ -34,10 +34,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
+import com.google.gson.Gson;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
+import com.hanuor.fluke.launcher.MainActivity;
+import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
 import com.squareup.picasso.Picasso;
@@ -65,13 +68,20 @@ public class FirstScreenFrag extends Fragment {
     TextView coo, cooname;
     FloatingActionButton fab;
     int insert_flag;
+    String fbImageURL = null;
     AccessToken otken;
     String Doc_id = null;
     int oldback = 0, oldtext = 0;
     public String playingnow_song = null, playingnow_artist = null;
     String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time"};
     LinearLayout bottom_desc;
+    public String song_track  = null;
     CircleImageView artistImage;
+    MainActivity mMains = new MainActivity();
+
+    JSONManager jsonManager = new JSONManager();
+
+    Gson gson = new Gson();
 
 
     private void searchSong(){
@@ -85,12 +95,14 @@ public class FirstScreenFrag extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            String action = intent.getAction();
-            String cmd = intent.getStringExtra("command");
-            Log.d("mIntentReceiver.onR", action + " / " + cmd+" URI "+intent.getLongExtra("id",-1));
-            Bundle bundle = intent.getExtras();
-            Set<String> keys = intent.getExtras().keySet();
-            Log.d("taggy",""+bundle);
+            Bundle bundle = null;
+            try {
+                String action = intent.getAction();
+                String cmd = intent.getStringExtra("command");
+                Log.d("mIntentReceiver.onR", action + " / " + cmd+" URI "+intent.getLongExtra("id",-1));
+                bundle = intent.getExtras();
+                Set<String> keys = intent.getExtras().keySet();
+                Log.d("taggy",""+bundle);
 
 
 /*
@@ -129,12 +141,18 @@ public class FirstScreenFrag extends Fragment {
                 }
                 // Log.d("INERER",res.print()) ;
                 playingnow_song = track;
+                song_track = track;
                 playingnow_artist = artist;
+                jsonManager.setArtist(artist);
+                jsonManager.setTrack(track);
                 hotswapping(artist, track);
             }
 
             Log.d("Music",artist+":"+album+":     SADASDASDA  "+track+"ablum id"+" "+bundle.get("albumId"));
            // iv.setText("Music"+artist+":"+album+":"+track);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
     };
@@ -241,7 +259,7 @@ public class FirstScreenFrag extends Fragment {
                                     String ass = amd.getString("#text");
                                     Log.d("MYMYMYMY",""+ass);
                                     if(ass!=null){
-
+                                        jsonManager.setArtistImage(ass);
                                         Picasso.with(getActivity()).load(ass).into(artistImage);
                                         Picasso.with(getActivity()).load(ass).into(targetq);
                                         break;
@@ -403,8 +421,11 @@ public class FirstScreenFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+
         View view = inflater.inflate(R.layout.first_frag, container, false);
         otken = AccessToken.getCurrentAccessToken();
+        String getURL = mMains.fbImage;
         insert_flag = 0;
         final String UID = otken.getUserId();
         // ivs = (ImageView) view.findViewById(R.id.ivs);
@@ -426,8 +447,15 @@ public class FirstScreenFrag extends Fragment {
             @Override
             public void onClick(View view) {
                 final String collection_name = UID;
-                final StringBuilder vs = new StringBuilder();
-                vs.append(FlukeApp42Database.jsontrack+""+playingnow_song+""+FlukeApp42Database.jsonid+""+UID+FlukeApp42Database.jsonartisit+playingnow_artist+""+FlukeApp42Database.jsonend);
+                //final StringBuilder vs = new StringBuilder();
+                jsonManager.setArtistImage("asd");
+                jsonManager.setArtist("ds");
+                jsonManager.setEbemail("dsaaa");
+                jsonManager.setTrack("asdsx");
+
+                final String jsons = gson.toJson(jsonManager,JSONManager.class);
+
+                //vs.append(FlukeApp42Database.jsontrack+""+playingnow_song+""+FlukeApp42Database.jsonid+""+UID+FlukeApp42Database.jsonartisit+playingnow_artist+""+FlukeApp42Database.jsonend);
 
 
 
@@ -455,7 +483,7 @@ public class FirstScreenFrag extends Fragment {
                                                         @Override
                                                         public void onSuccess(Object o) {
                                                             Log.d("DeletedI","Success");
-                                                            inserter_meth(vs.toString(), jsonDocList.size(), finalI);
+                                                            inserter_meth(jsons, jsonDocList.size(), finalI);
                                                          }
 
                                                         @Override
@@ -477,7 +505,8 @@ public class FirstScreenFrag extends Fragment {
                                         }
                                         if(insert_flag == 1){
                                             Log.d("TOTLA","insertis");
-                                            FlukeApp42Database.ss.insertJSONDocument(FlukeApp42Database.database,FlukeApp42Database.datacollectionId, vs.toString(), new App42CallBack() {
+
+                                            FlukeApp42Database.ss.insertJSONDocument(FlukeApp42Database.database,FlukeApp42Database.datacollectionId, jsons, new App42CallBack() {
                                                 @Override
                                                 public void onSuccess(Object o) {
                                                     Log.d("DoneY","VAMOS");

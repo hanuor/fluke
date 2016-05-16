@@ -28,9 +28,10 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':library')
     testCompile 'junit:junit:4.12'
+    compile files('libs/gson-2.2.4.jar')
     compile files('libs/App42_ANDROID_SDK_3.8.jar')
     compile 'com.github.kikoso:SwipeableCards:1.1-RELEASE@aar'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+
     compile 'com.android.support:palette-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'

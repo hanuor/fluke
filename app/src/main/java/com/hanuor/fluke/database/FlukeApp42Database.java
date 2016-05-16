@@ -10,6 +10,7 @@ import com.shephertz.app42.paas.sdk.android.storage.StorageService;
 public class FlukeApp42Database {
     public static final String database = "flukedata";
     public static final String jsontrack = "{\"track\":\"";
+    public static final String userImage = ",\"user_fb_image\":";
     public static final String jsonid = "\",\"id\":";
     public static final String jsonartisit = ",\"artist\":\"";
     public static final String jsonend = "\"}";
