@@ -4,22 +4,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Toast;
 
 import com.andtinder.view.CardContainer;
 import com.hanuor.fluke.R;
@@ -28,8 +27,6 @@ import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
 import com.hanuor.fluke.interfaces.ServerInterface;
 import com.hanuor.fluke.serverhandler.ServerTasker;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -40,7 +37,7 @@ public class SecondScreenFrag extends Fragment{
     ArrayList<String> mIdstore;
     ArrayList<String> mfinalStore;
     JSONServerGS  gs = new JSONServerGS();
-
+    Toolbar tb;
 
 
     @Override
@@ -106,7 +103,13 @@ public class SecondScreenFrag extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_second_screen, container, false);
-        final RecyclerView recList = (RecyclerView) view.findViewById(R.id.cardList);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_header);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        /*
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        */final RecyclerView recList = (RecyclerView) view.findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -119,7 +122,8 @@ public class SecondScreenFrag extends Fragment{
                 ArrayList<String> fetchDetails  = new ArrayList<String>();
                 String Lister[];
                 ArrayList<String> good = new ArrayList<String>();
-                Toast.makeText(getActivity(), "Yipeee", Toast.LENGTH_SHORT).show();
+                ArrayList<String> artistIma = new ArrayList<String>();
+               // Toast.makeText(getActivity(), "Yipeee", Toast.LENGTH_SHORT).show();
                 Log.d("STRRR",""+fetchAll.size());
                 //Do your task here
                 for(int i=0;i<fetchAll.size();i++) {
@@ -131,37 +135,24 @@ public class SecondScreenFrag extends Fragment{
                     //String mos[] = Lister[0].split(FlukeApp42Database.separator);
                     // Log.d("SSSS",""+mos.length);
                     String fbName = Lister[0];
-                    fetchDetails.add(fbName);
+                    String rename = fbName.replace("%20"," ");
+                    fetchDetails.add(rename);
                     String fbPic = Lister[1];
                     good.add(fbPic);
-                    String track = Lister[3];
+
                     String email = Lister[2];
+                    String track = Lister[3];
                     String artist = Lister[4];
+                    String artistIm = Lister[5];
+                    artistIma.add(artistIm);
+                    String albumIm = Lister[6];
 
 
-                    //model.setTitle(fbName);
-                    Picasso.with(getActivity()).load(fbPic).into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            Drawable mD = new BitmapDrawable(getActivity().getResources(),bitmap);
-
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
-
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        }
-                    });
 
 
                 }
 
-            ResultAdapter rS = new ResultAdapter(getActivity(),good,fetchDetails);
+             ResultAdapter rS = new ResultAdapter(getActivity(),good,fetchDetails,artistIma);
                 recList.setAdapter(rS);
 
 
@@ -175,7 +166,14 @@ public class SecondScreenFrag extends Fragment{
         return view;
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                getActivity().onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

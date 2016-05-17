@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hanuor.fluke.R;
 import com.squareup.picasso.Picasso;
@@ -21,13 +21,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHolder> {
     ArrayList<String> fbNames;
     ArrayList<String> fb;
-
+    ArrayList<String> artista;
     Context c;
-    public ResultAdapter(Context c,ArrayList<String> fbNames,ArrayList<String> fb){
+    public ResultAdapter(Context c,ArrayList<String> fbNames,ArrayList<String> fb,ArrayList<String> artista){
         this.fbNames = fbNames;
         this.fb = fb;
+        this.artista = artista;
+
         this.c = c;
     }
+
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,13 +45,19 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
     public void onBindViewHolder(MyViewHolder holder, int position) {
         CircleImageView cIM =  holder.cIM;
         TextView tv = holder.tv;
-        Toast.makeText(c, ""+fbNames.get(position), Toast.LENGTH_SHORT).show();
+        ImageView arImage = holder.arImage;
+        //Toast.makeText(c, ""+fbNames.get(position), Toast.LENGTH_SHORT).show();
         tv.setText(fb.get(position));
         Picasso.with(c).load(fbNames.get(position)).into(cIM);
+        Picasso.with(c).load(artista.get(position)).into(arImage);
+        //setAnimation(holder.container, position);
+
+
 
 
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -59,8 +68,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
         private CircleImageView cIM;
         TextView tv;
+        ImageView arImage;
         public MyViewHolder(View itemView) {
             super(itemView);
+            arImage = (ImageView) itemView.findViewById(R.id.arImage);
             tv = (TextView) itemView.findViewById(R.id.textView);
             cIM = (CircleImageView) itemView.findViewById(R.id.userImage);
 
