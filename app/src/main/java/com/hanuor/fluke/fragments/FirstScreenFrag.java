@@ -44,7 +44,6 @@ import com.hanuor.fluke.database.FlukeApp42Database;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
 import com.hanuor.fluke.launcher.MainActivity;
 import com.hanuor.fluke.serverhandler.JSONManager;
-import com.hanuor.fluke.serverhandler.ServerTasker;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
 import com.squareup.picasso.Picasso;
@@ -588,25 +587,31 @@ public class FirstScreenFrag extends Fragment {
     private void getFBINFO(AccessToken otken) {
 
         Log.d("FBI","A"+otken);
-        GraphRequest request = GraphRequest.newMeRequest(otken, new GraphRequest.GraphJSONObjectCallback() {
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                try {
-                    String userid = object.optString("id");
-                    String rem = "https://graph.facebook.com/" + userid+ "/picture?type=large";
+        try {
+            GraphRequest request = GraphRequest.newMeRequest(otken, new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(JSONObject object, GraphResponse response) {
+                    try {
+                        String useridss = object.getString("id");
+                        String rem = "https://graph.facebook.com/" + useridss+ "/picture?type=large";
 
-                    jsonServerGS.setFbName(object.getString("name"));
-                    jsonServerGS.setEbemail(object.getString("email"));
-                    jsonServerGS.setFbUserpic(rem);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        jsonServerGS.setFbName(object.getString("name"));
+                        jsonServerGS.setEbemail(object.getString("email"));
+                        jsonServerGS.setFbUserpic(rem);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }catch (Exception es){
+                        es.printStackTrace();
+                    }
                 }
-            }
-        });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,gender, birthday");
-        request.setParameters(parameters);
-        request.executeAsync();
+            });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,name,email,gender, birthday");
+            request.setParameters(parameters);
+            request.executeAsync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

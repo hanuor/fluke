@@ -18,6 +18,6 @@
         android:textColor="#212121"
         android:layout_centerVertical="true"
         android:fontFamily="sans-serif-condensed"
-        android:text="Fluke"/>
+        android:text=""/>
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>

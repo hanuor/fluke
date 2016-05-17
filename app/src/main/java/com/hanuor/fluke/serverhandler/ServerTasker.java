@@ -11,7 +11,6 @@ import android.util.Log;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
 import com.hanuor.fluke.interfaces.ServerInterface;
-import com.shephertz.app42.paas.sdk.android.App42Exception;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
 
 import org.json.JSONObject;
@@ -67,15 +66,10 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
 
     @Override
     protected Storage doInBackground(Void... voids) {
-        try {
             String dbName = FlukeApp42Database.database;
             String dataCollection = FlukeApp42Database.datacollectionId;
             Storage sto = FlukeApp42Database.ss.findAllDocuments(dbName,dataCollection);
             return sto;
-        } catch (App42Exception e) {
-            e.printStackTrace();
-        }
-        return null;
 
 
     }
@@ -90,29 +84,34 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
         for (int i = 0; i < jsonDocList.size(); i++) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
-                String name = jsonObject.getString("fbName");
-                String track = jsonObject.getString("track");
+                String name = jsonObject.getString("fbName").replace(" ","%20");
+
+                String track = jsonObject.getString("track").replaceAll(" ","%20");
                 String mail = jsonObject.getString("ebemail");
-                String artist = jsonObject.getString("artist");
+                String artist = jsonObject.getString("artist").replace(" ","%20");
                 String artistIm = jsonObject.getString("artistImage");
                 String albumIm = jsonObject.getString("albumImage");
                 String userPic = jsonObject.getString("fbUserpic");
-                if (playing_now != null) {
+               /* if (playing_now != null) {
                     if (playing_now.contentEquals(track)) {
                         if (name.contentEquals("Shantanu Johri")) {
-                            StringBuilder stringBuilder = new StringBuilder();
-                            stringBuilder.append(name+FlukeApp42Database.separator+userPic+FlukeApp42Database.separator+mail+FlukeApp42Database.separator+track+FlukeApp42Database.separator+artist+FlukeApp42Database.separator+artistIm+FlukeApp42Database.separator+albumIm);
+               */             StringBuilder stringBuilder = new StringBuilder();
+                            stringBuilder.append(name+" "+userPic+ " "+mail+" "+track+" "+artist+" "+artistIm+" "+ albumIm);
+                            // stringBuilder.append(name+FlukeApp42Database.separator+userPic+FlukeApp42Database.separator+mail+FlukeApp42Database.separator+track+FlukeApp42Database.separator+artist+FlukeApp42Database.separator+artistIm+FlukeApp42Database.separator+albumIm);
                             idoo.add(stringBuilder.toString());
                             Log.d("Pingin", "YEs" + playing_now + " " + idoo.size());
-                             } else {
+                           //  } else {
                             //pinging the server again
                             //fetchMatchingSuff(track);
-                            ServerTasker sa = new ServerTasker(c,serverInterface);
-                            sa.execute();
+                            Log.d("REEXE","REXEXEXEX");
+                           // ServerTasker sa = new ServerTasker(c,serverInterface);
+                            //sa.execute();
+/*
 
                         }
                     }
                 }
+*/
 
                    }catch(Exception e){
 
