@@ -1,24 +1,27 @@
 package com.hanuor.fluke.launcher;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import com.github.ybq.android.spinkit.SpinKitView;
 import com.hanuor.fluke.R;
-import com.hanuor.fluke.adapters.ToolbarViewPager;
+import com.hanuor.fluke.fragments.FirstScreenFrag;
+import com.hanuor.fluke.fragments.SecondScreenFrag;
 
 /**
  * Created by Shantanu Johri on 07-05-2016.
  */
 public class FragHandler extends AppCompatActivity {
     Toolbar toolbar;
-
+    Fragment fragOne;
+    Fragment fragTwo;
     TextView iv;
+    TabLayout tabLayout;
     int ico[] = {R.drawable.ic_stat_music_search,R.drawable.ic_action_slideshare_logo};
 
     @Override
@@ -29,17 +32,56 @@ public class FragHandler extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_header); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new ToolbarViewPager(getSupportFragmentManager()));
+        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
 
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(ico[0]);
+        bindWidgetsWithAnEvent();
+        setupTabLayout();
+    }
 
-        tabLayout.getTabAt(1).setIcon(ico[1]);
-        tabLayout.getTabAt(2).setIcon(ico[0]);
-        tabLayout.getTabAt(3).setIcon(ico[0]);
+    private void setupTabLayout() {
 
+        fragOne = new FirstScreenFrag();
+        fragTwo = new SecondScreenFrag();
+        tabLayout.addTab(tabLayout.newTab().setText("Search"),true);
+        tabLayout.addTab(tabLayout.newTab().setText("Two"));
+    }
+
+    private void bindWidgetsWithAnEvent() {
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                setCurrentTabFragment(tab.getPosition());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+    }
+
+    private void setCurrentTabFragment(int position) {
+
+
+        switch (position)
+        {
+            case 0 :
+                replaceFragment(fragOne);
+                break;
+            case 1 :
+                replaceFragment(fragTwo);
+                break;
+        }
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.frame_container, fragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.commit();
     }
 
 

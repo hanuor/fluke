@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
-import com.hanuor.fluke.fragments.FirstScreenFrag;
+import com.hanuor.fluke.interfaces.ServerInterface;
 import com.shephertz.app42.paas.sdk.android.App42Exception;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
 
@@ -25,9 +25,11 @@ import java.util.Set;
 public class ServerTasker extends AsyncTask<Void, Void, Storage> {
     Context c;
     String playing_now = null;
+    public ServerInterface serverInterface = null;
 
-    public ServerTasker(Context c) {
+    public ServerTasker(Context c,ServerInterface serverInterface) {
         this.c = c;
+        this.serverInterface = serverInterface;
     }
 
     @Override
@@ -88,22 +90,24 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
         for (int i = 0; i < jsonDocList.size(); i++) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
-                String id = jsonObject.getString("id");
-                Log.d("TOTL", "" + id);
-                String trackJSON = jsonObject.getString("track");
-                Log.d("Pinging Server", "T");
-                FirstScreenFrag ms = new FirstScreenFrag();
-                //String track = ms.song_track;
-                Log.d("Pingin",""+playing_now);
+                String name = jsonObject.getString("fbName");
+                String track = jsonObject.getString("track");
+                String mail = jsonObject.getString("ebemail");
+                String artist = jsonObject.getString("artist");
+                String artistIm = jsonObject.getString("artistImage");
+                String albumIm = jsonObject.getString("albumImage");
+                String userPic = jsonObject.getString("fbUserpic");
                 if (playing_now != null) {
-                    if (playing_now.contentEquals(trackJSON)) {
-                        if (id.contentEquals(FlukeApp42Database.UserID)) {
-                            idoo.add(id);
+                    if (playing_now.contentEquals(track)) {
+                        if (name.contentEquals("Shantanu Johri")) {
+                            StringBuilder stringBuilder = new StringBuilder();
+                            stringBuilder.append(name+FlukeApp42Database.separator+userPic+FlukeApp42Database.separator+mail+FlukeApp42Database.separator+track+FlukeApp42Database.separator+artist+FlukeApp42Database.separator+artistIm+FlukeApp42Database.separator+albumIm);
+                            idoo.add(stringBuilder.toString());
                             Log.d("Pingin", "YEs" + playing_now + " " + idoo.size());
                              } else {
                             //pinging the server again
                             //fetchMatchingSuff(track);
-                            ServerTasker sa = new ServerTasker(c);
+                            ServerTasker sa = new ServerTasker(c,serverInterface);
                             sa.execute();
 
                         }
@@ -115,7 +119,14 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
                 }
 
         }
-
-
+        if (idoo!=null) {
+            serverInterface.fetchalldetails(idoo);
+        }
     }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+    }
+
 }

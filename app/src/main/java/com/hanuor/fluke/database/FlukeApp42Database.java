@@ -9,11 +9,7 @@ import com.shephertz.app42.paas.sdk.android.storage.StorageService;
  */
 public class FlukeApp42Database {
     public static final String database = "flukedata";
-    public static final String jsontrack = "{\"track\":\"";
-    public static final String userImage = ",\"user_fb_image\":";
-    public static final String jsonid = "\",\"id\":";
-    public static final String jsonartisit = ",\"artist\":\"";
-    public static final String jsonend = "\"}";
+    public static final String separator = "^Q#$1107/GH^";
     public static final String datacollectionId = "1281537931875901";
     public static final StorageService ss = App42API.buildStorageService();
     public static final String UserID = AccessToken.getCurrentAccessToken().getUserId();

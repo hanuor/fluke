@@ -1,12 +1,6 @@
 package com.hanuor.fluke.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,19 +9,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.andtinder.model.CardModel;
+import com.andtinder.model.Orientations;
 import com.andtinder.view.CardContainer;
 import com.hanuor.fluke.R;
-import com.hanuor.fluke.apihits.MusicHits;
+import com.hanuor.fluke.database.FlukeApp42Database;
+import com.hanuor.fluke.interfaces.ServerInterface;
 import com.hanuor.fluke.serverhandler.ServerTasker;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
 
-public class SecondScreenFrag extends Fragment {
+public class SecondScreenFrag extends Fragment{
     CardContainer mcardContainer;
     int checkoir;
     ArrayList<String> mIdstore;
     ArrayList<String> mfinalStore;
+
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+    }
 
     @Nullable
     @Override
@@ -35,117 +42,69 @@ public class SecondScreenFrag extends Fragment {
         View view = inflater.inflate(R.layout.fragment_second_screen, container, false);
 
         mcardContainer = (CardContainer) view.findViewById(R.id.layoutview);
-        mIdstore = new ArrayList<String>();
-        mfinalStore = new ArrayList<String>();
+        mcardContainer.setOrientation(Orientations.Orientation.Disordered);
+
+
+
+
+        ServerTasker s = (ServerTasker) new ServerTasker(getActivity(), new ServerInterface() {
+            @Override
+            public void fetchalldetails(ArrayList<String> fetchAll) {
+
+                List<String> fetchDetails;
+                Toast.makeText(getActivity(), "Yipeee", Toast.LENGTH_SHORT).show();
+                //Do your task here
+                for(int i=0;i<fetchAll.size();i++) {
+
+                    fetchDetails = Arrays.asList(fetchAll.get(i).split(FlukeApp42Database.separator));
+                    Log.d("STRINGER",""+fetchDetails.get(0));
+                   /* String fbName = fetchDetails.get(6);
+                    String fbPic = fetchDetails.get(5);
+                    String track = fetchDetails.get(0);
+                    String email = fetchDetails.get(1);
+                    String artist = fetchDetails.get(2);
+                   */ final CardModel model = new CardModel();
+                    //model.setTitle(fbName);
+                    /*Picasso.with(getActivity()).load(fbPic).into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            Drawable mD = new BitmapDrawable(getActivity().getResources(),bitmap);
+                            model.setCardImageDrawable(mD);
+
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
+
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
+*/
+                }
+
+
+
+
+            }
+        }).execute();
+
+
+
         checkoir = 0;
-        MusicHits mah = new MusicHits();
-        IntentFilter ifco = mah.searchsong();
-        getActivity().registerReceiver(mReceiver, ifco);
 
         return view;
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            String action = intent.getAction();
-            String cmd = intent.getStringExtra("command");
-            Log.d("mIntentReceiver.onR", action + " / " + cmd+" URI "+intent.getLongExtra("id",-1));
-            Bundle bundle = intent.getExtras();
-            Set<String> keys = intent.getExtras().keySet();
-            Log.d("taggy",""+bundle);
-            String artist = intent.getStringExtra("artist");
-            String album = intent.getStringExtra("album");
-            String track = intent.getStringExtra("track");
-
-            Long ai = (Long) bundle.get("albumId");
-            Log.d("Toaster",""+ai);
-            String ais = String.valueOf(ai);
-            //Long mela = Long.getLong(ai);
-            if(album!=null) {
-                Cursor cursor = getActivity().managedQuery(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                        new String[] {MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ALBUM_ART},
-                        MediaStore.Audio.Albums._ID+ "=?",
-                        new String[] {String.valueOf(ais)},
-                        null);
-
-                if (cursor.moveToFirst()) {
-                    String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
-                    Log.d("PAther",""+path);
-                    // do whatever you need to do
-                }
-                //Do here what you want to do
-            }
-            fetchMatchingSuff(track);
-            Log.d("Music",artist+":"+album+":     SADASDASDA  "+track+"ablum id"+" "+bundle.get("albumId"));
-        }
-    };
-            private void fetchMatchingSuff(final String track) {
-
-                ServerTasker s = new ServerTasker(getActivity());
-                s.execute();
-                            /*    FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
-                                    @Override
-                                    public void onSuccess(Object o) {
-                                        // Log.d("Success", "" + o.toString());
-                                        Storage storage = (Storage) o;
-                                        //This will return JSONObject list, however since Object Id is unique, list will only have one object
-                                        final ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();
-                                        for (int i = 0; i < jsonDocList.size(); i++) {
-                                            try {
-                                                JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
-                                                String id = jsonObject.getString("id");
-                                                Log.d("TOTL", "" + id);
-                                                String trackJSON = jsonObject.getString("track");
-                                                Log.d("Pinging Server","T");
-                                                if(track.contentEquals(trackJSON)){
-                                                    if(id.contentEquals(FlukeApp42Database.UserID)){
-                                                        mIdstore.add(id);
-                                                        Log.d("Pingin","YEs"+track+" "+mIdstore.size());
-                                                       // updateUIS(mIdstore);
-                                                        //fetchMatchingSuff(track);
-                                                        //Make an array of ids
-                                                    }
-                                                    else{
-                                                        //pinging the server again
-                                                        fetchMatchingSuff(track);
-                                                    }
-                                                }
-                                            } catch (Exception e) {
-                                            }
-                                        }
-                                       // updateUIS(mIdstore);
-                                    }
-
-
-                                    @Override
-                                    public void onException(Exception e) {
-                                        Log.d("SuccessNOT",""+e);
-
-                                    }
-                                });
-              */  if (mfinalStore!=null){
-                    Toast.makeText(getActivity(), " V "+mfinalStore.size()+"   V" + mIdstore.size(), Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getActivity(), ""+mfinalStore.size(), Toast.LENGTH_SHORT).show();
-                }
-
-  }
 
 
     @Override
     public void onPause() {
         super.onPause();
        // onDestroy();
-    }
-
-    private void updateUIS(ArrayList<String> mStore) {
-        mfinalStore = mStore;
-        Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-   // fetchProfiles();
-
     }
 
 
