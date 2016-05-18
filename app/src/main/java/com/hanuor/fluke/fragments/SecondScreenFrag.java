@@ -20,7 +20,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 
-import com.andtinder.view.CardContainer;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.adapters.ResultAdapter;
 import com.hanuor.fluke.apihits.MusicHits;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class SecondScreenFrag extends Fragment{
-    CardContainer mcardContainer;
     int checkoir;
     ArrayList<String> mIdstore;
     ArrayList<String> mfinalStore;

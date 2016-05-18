@@ -33,7 +33,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#8cffffff"
+                android:background="#b3ffffff"
                 android:paddingTop="50dp"
                 android:paddingBottom="50dp"
                 >
