@@ -186,9 +186,16 @@ public class SecondScreenFrag extends Fragment{
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+    getActivity().unregisterReceiver(mReceiver);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
-       // onDestroy();
+        getActivity().unregisterReceiver(mReceiver);
+        // onDestroy();
     }
 
 
