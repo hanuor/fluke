@@ -458,6 +458,7 @@ public class FirstScreenFrag extends Fragment {
                 jsonManager.setTrack(jsonServerGS.getTrack());
                 jsonManager.setEbemail(jsonServerGS.getEbemail());
                 jsonManager.setFbName(jsonServerGS.getFbName());
+                jsonManager.setId(jsonServerGS.getId());
                 jsonManager.setFbUserpic(jsonServerGS.getFbUserpic());
                 Log.d("FBI JSS",""+jsonServerGS.getFbName());
 
@@ -465,12 +466,7 @@ public class FirstScreenFrag extends Fragment {
 
 
                 final String jsons = gson.toJson(jsonManager,JSONManager.class);
-
-                //vs.append(FlukeApp42Database.jsontrack+""+playingnow_song+""+FlukeApp42Database.jsonid+""+UID+FlukeApp42Database.jsonartisit+playingnow_artist+""+FlukeApp42Database.jsonend);
-
-
-
-                                FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
+          FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
                                     @Override
                                     public void onSuccess(Object o) {
                                         Log.d("Success",""+o.toString());
@@ -478,40 +474,56 @@ public class FirstScreenFrag extends Fragment {
                                         //This will return JSONObject list, however since Object Id is unique, list will only have one object
                                         final ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();
                                          int inserter_checker = 1;
-                                        for(int i=0;i<jsonDocList.size();i++) {
-                                            try {
-                                                JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
-                                                String id = jsonObject.getString("id");
-                                                Log.d("TOTL",""+id);
-                                                String track = jsonObject.getString("track");
-                                                if(id.contentEquals(UID)){
-                                                    inserter_checker = 1;
-                                                    insert_flag = 0;
-                                                    Log.d("TOTLA","India");
-                                                    String DOCid = jsonDocList.get(i).getDocId();
-                                                    final int finalI = i;
-                                                    FlukeApp42Database.ss.deleteDocumentById(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, DOCid, new App42CallBack() {
-                                                        @Override
-                                                        public void onSuccess(Object o) {
-                                                            Log.d("DeletedI","Success");
-                                                            inserter_meth(jsons, jsonDocList.size(), finalI);
-                                                         }
-
-                                                        @Override
-                                                        public void onException(Exception e) {
-                                                            Log.d("DeletedI",""+e);
-                                                        }
-                                                    });
-                                                }else{
-                                                    insert_flag = 1;
-                                                   // break;
-
-
+                                        if(jsonDocList.size()==0){
+                                            FlukeApp42Database.ss.insertJSONDocument(FlukeApp42Database.database,FlukeApp42Database.datacollectionId, jsons, new App42CallBack() {
+                                                @Override
+                                                public void onSuccess(Object o) {
+                                                    Log.d("DoneY","VAMOS");
 
                                                 }
-                                                Log.d("Succ",""+id+" and "+track);
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
+
+                                                @Override
+                                                public void onException(Exception e) {
+                                                    Log.d("DoneY",""+e);
+                                                }
+                                            });
+
+
+                                        }else {
+                                            for (int i = 0; i < jsonDocList.size(); i++) {
+                                                try {
+                                                    JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
+                                                    String id = jsonObject.getString("id");
+                                                    Log.d("TOTL", "" + id);
+                                                    String track = jsonObject.getString("track");
+                                                    if (id.contentEquals(UID)) {
+                                                        inserter_checker = 1;
+                                                        insert_flag = 0;
+                                                        Log.d("TOTLA", "India");
+                                                        String DOCid = jsonDocList.get(i).getDocId();
+                                                        final int finalI = i;
+                                                        FlukeApp42Database.ss.deleteDocumentById(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, DOCid, new App42CallBack() {
+                                                            @Override
+                                                            public void onSuccess(Object o) {
+                                                                Log.d("DeletedI", "Success");
+                                                                inserter_meth(jsons, jsonDocList.size(), finalI);
+                                                            }
+
+                                                            @Override
+                                                            public void onException(Exception e) {
+                                                                Log.d("DeletedI", "" + e);
+                                                            }
+                                                        });
+                                                    } else {
+                                                        insert_flag = 1;
+                                                        // break;
+
+
+                                                    }
+                                                    Log.d("Succ", "" + id + " and " + track);
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
                                         }
                                         if(insert_flag == 1){
@@ -536,6 +548,21 @@ public class FirstScreenFrag extends Fragment {
 
                                     @Override
                                     public void onException(Exception e) {
+
+                                        FlukeApp42Database.ss.insertJSONDocument(FlukeApp42Database.database,FlukeApp42Database.datacollectionId, jsons, new App42CallBack() {
+                                            @Override
+                                            public void onSuccess(Object o) {
+                                                Log.d("DoneY","VAMOS");
+
+                                            }
+
+                                            @Override
+                                            public void onException(Exception e) {
+                                                Log.d("DoneY",""+e);
+                                            }
+                                        });
+
+
                                         Log.d("SuccessNOT",""+e);
 
                                     }
@@ -594,7 +621,7 @@ public class FirstScreenFrag extends Fragment {
                     try {
                         String useridss = object.getString("id");
                         String rem = "https://graph.facebook.com/" + useridss+ "/picture?type=large";
-
+                        jsonServerGS.setId(object.getString("id"));
                         jsonServerGS.setFbName(object.getString("name"));
                         jsonServerGS.setEbemail(object.getString("email"));
                         jsonServerGS.setFbUserpic(rem);

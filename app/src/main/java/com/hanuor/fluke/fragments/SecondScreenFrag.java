@@ -123,6 +123,8 @@ public class SecondScreenFrag extends Fragment{
                 String Lister[];
                 ArrayList<String> good = new ArrayList<String>();
                 ArrayList<String> artistIma = new ArrayList<String>();
+
+                ArrayList<String> fbtimey = new ArrayList<String>();
                // Toast.makeText(getActivity(), "Yipeee", Toast.LENGTH_SHORT).show();
                 Log.d("STRRR",""+fetchAll.size());
                 //Do your task here
@@ -146,13 +148,16 @@ public class SecondScreenFrag extends Fragment{
                     String artistIm = Lister[5];
                     artistIma.add(artistIm);
                     String albumIm = Lister[6];
+                    String timers = Lister[7];
+                    String listme[] = timers.split("T");
+                    fbtimey.add(listme[1]);
 
 
 
 
                 }
 
-             ResultAdapter rS = new ResultAdapter(getActivity(),good,fetchDetails,artistIma);
+             ResultAdapter rS = new ResultAdapter(getActivity(),good,fetchDetails,artistIma,fbtimey);
                 recList.setAdapter(rS);
 
 

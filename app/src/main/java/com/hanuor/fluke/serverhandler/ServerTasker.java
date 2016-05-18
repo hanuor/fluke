@@ -81,6 +81,7 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
 
 
         final ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();
+
         for (int i = 0; i < jsonDocList.size(); i++) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
@@ -91,12 +92,13 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
                 String artist = jsonObject.getString("artist").replace(" ","%20");
                 String artistIm = jsonObject.getString("artistImage");
                 String albumIm = jsonObject.getString("albumImage");
+                String time = jsonDocList.get(i).getCreatedAt();
                 String userPic = jsonObject.getString("fbUserpic");
                /* if (playing_now != null) {
                     if (playing_now.contentEquals(track)) {
                         if (name.contentEquals("Shantanu Johri")) {
-               */             StringBuilder stringBuilder = new StringBuilder();
-                            stringBuilder.append(name+" "+userPic+ " "+mail+" "+track+" "+artist+" "+artistIm+" "+ albumIm);
+               */           StringBuilder stringBuilder = new StringBuilder();
+                            stringBuilder.append(name+" "+userPic+ " "+mail+" "+track+" "+artist+" "+artistIm+" "+ albumIm+" "+time);
                             // stringBuilder.append(name+FlukeApp42Database.separator+userPic+FlukeApp42Database.separator+mail+FlukeApp42Database.separator+track+FlukeApp42Database.separator+artist+FlukeApp42Database.separator+artistIm+FlukeApp42Database.separator+albumIm);
                             idoo.add(stringBuilder.toString());
                             Log.d("Pingin", "YEs" + playing_now + " " + idoo.size());

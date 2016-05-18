@@ -22,11 +22,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
     ArrayList<String> fbNames;
     ArrayList<String> fb;
     ArrayList<String> artista;
+
+    ArrayList<String> timeys;
     Context c;
-    public ResultAdapter(Context c,ArrayList<String> fbNames,ArrayList<String> fb,ArrayList<String> artista){
+    public ResultAdapter(Context c,ArrayList<String> fbNames,ArrayList<String> fb,ArrayList<String> artista,ArrayList<String> timeys){
         this.fbNames = fbNames;
         this.fb = fb;
         this.artista = artista;
+        this.timeys = timeys;
 
         this.c = c;
     }
@@ -45,9 +48,11 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
     public void onBindViewHolder(MyViewHolder holder, int position) {
         CircleImageView cIM =  holder.cIM;
         TextView tv = holder.tv;
+        TextView timey = holder.timey;
         ImageView arImage = holder.arImage;
         //Toast.makeText(c, ""+fbNames.get(position), Toast.LENGTH_SHORT).show();
         tv.setText(fb.get(position));
+        timey.setText(timeys.get(position));
         Picasso.with(c).load(fbNames.get(position)).into(cIM);
         Picasso.with(c).load(artista.get(position)).into(arImage);
         //setAnimation(holder.container, position);
@@ -68,9 +73,11 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
         private CircleImageView cIM;
         TextView tv;
+        TextView timey;
         ImageView arImage;
         public MyViewHolder(View itemView) {
             super(itemView);
+            timey = (TextView) itemView.findViewById(R.id.timer);
             arImage = (ImageView) itemView.findViewById(R.id.arImage);
             tv = (TextView) itemView.findViewById(R.id.textView);
             cIM = (CircleImageView) itemView.findViewById(R.id.userImage);
