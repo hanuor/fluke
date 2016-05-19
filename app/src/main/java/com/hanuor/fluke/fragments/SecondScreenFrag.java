@@ -27,8 +27,11 @@ import com.hanuor.fluke.gettersetters.JSONServerGS;
 import com.hanuor.fluke.interfaces.ServerInterface;
 import com.hanuor.fluke.serverhandler.ServerTasker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
+import java.util.TimeZone;
 
 public class SecondScreenFrag extends Fragment{
     int checkoir;
@@ -61,17 +64,6 @@ public class SecondScreenFrag extends Fragment{
                 bundle = intent.getExtras();
                 Set<String> keys = intent.getExtras().keySet();
                 Log.d("taggy",""+bundle);
-
-
-/*
-            Log.d("moasa",""+keys.size()+"Bundle "+bundle);
-            for(int y=0;y<keys.size();y++){
-                Log.d("moasa",""+keys.toString());
-
-            }
-*/
-
-
                 Animation fadeIn = new AlphaAnimation(1, 0);
                 fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
                 fadeIn.setDuration(1000);
@@ -147,8 +139,35 @@ public class SecondScreenFrag extends Fragment{
                     artistIma.add(artistIm);
                     String albumIm = Lister[6];
                     String timers = Lister[7];
-                    String listme[] = timers.split("T");
-                    fbtimey.add(listme[1]);
+                    Log.d("TIME",""+timers);
+                    String listme = timers.replace("."," ");
+                    String ala[] = listme.split(" ");
+                    String mas = ala[0].replace("T"," ");
+
+
+                    try
+                    {
+                        String ourDate = mas
+                                ;
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        Date value = formatter.parse(ourDate);
+
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy HH:mm"); //this format changeable
+                        dateFormatter.setTimeZone(TimeZone.getDefault());
+                        ourDate = dateFormatter.format(value);
+
+                        Log.d("OurDate", ""+ourDate);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                       // OurDate = "00-00-0000 00:00";
+                    }
+
+                  //  Log.d("ALLNIGHT",""+formattedDate);
+
+                    //fbtimey.add(listme[1]);
 
 
 
@@ -158,7 +177,7 @@ public class SecondScreenFrag extends Fragment{
              ResultAdapter rS = new ResultAdapter(getActivity(),good,fetchDetails,artistIma,fbtimey);
                 recList.setAdapter(rS);
 
-
+               // 2016-05-19T16:39:54.322Z
 
             }
         }).execute();
@@ -177,11 +196,7 @@ public class SecondScreenFrag extends Fragment{
         }
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-    }
 
     @Override
     public void onStop() {
