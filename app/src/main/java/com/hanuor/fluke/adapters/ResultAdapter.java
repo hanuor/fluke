@@ -52,7 +52,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         ImageView arImage = holder.arImage;
         //Toast.makeText(c, ""+fbNames.get(position), Toast.LENGTH_SHORT).show();
         tv.setText(fb.get(position));
-        timey.setText("mm");
+        timey.setText(timeys.get(position));
         Picasso.with(c).load(fbNames.get(position)).into(cIM);
         Picasso.with(c).load(artista.get(position)).into(arImage);
         //setAnimation(holder.container, position);

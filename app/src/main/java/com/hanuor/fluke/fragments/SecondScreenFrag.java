@@ -29,6 +29,7 @@ import com.hanuor.fluke.serverhandler.ServerTasker;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import java.util.TimeZone;
@@ -156,23 +157,44 @@ public class SecondScreenFrag extends Fragment{
                         SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy HH:mm"); //this format changeable
                         dateFormatter.setTimeZone(TimeZone.getDefault());
                         ourDate = dateFormatter.format(value);
+                        String vall[] = ourDate.split(" ");
+                        String omk = vall[1];
+                        Log.d("OMK",omk);
 
-                        Log.d("OurDate", ""+ourDate);
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.HOUR_OF_DAY, 0);
+                        calendar.set(Calendar.MINUTE, 0);
+                        String kow = new SimpleDateFormat("HH:mm").format(new Date()).toString();
+
+                       // String omk1 = new SimpleDateFormat("HH:mm").format(calendar.getTime()).toString();
+                        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                        Date date1 = format.parse(kow);
+                        Log.d("Origi",""+kow);
+                        Date date2 = format.parse(omk);
+                        long difference = date2.getTime() - date1.getTime();
+                        Log.d("OurDate", ""+difference);
+                        if(difference<0){
+                            difference = 0-difference;
+                        }
+                        if(difference >= 0 && difference < 10000){
+                            fbtimey.add("Listening to this now");
+                        }else if(difference >10000 && difference < 100000){
+                            fbtimey.add("Just a few seconds ago");
+                        }else if(difference > 100000 && difference <1000000){
+                            fbtimey.add("Minutes ago");
+                        }else if (difference >10000000){
+                            fbtimey.add("Long time ago");
+                        }else{
+                            fbtimey.add("NNN");
+                        }
                     }
                     catch (Exception e)
                     {
                         e.printStackTrace();
-                       // OurDate = "00-00-0000 00:00";
                     }
-
-                  //  Log.d("ALLNIGHT",""+formattedDate);
-
-                    //fbtimey.add(listme[1]);
-
-
-
-
                 }
+                Log.d("MMMMMMM",""+fbtimey.size());
 
              ResultAdapter rS = new ResultAdapter(getActivity(),good,fetchDetails,artistIma,fbtimey);
                 recList.setAdapter(rS);
@@ -201,7 +223,7 @@ public class SecondScreenFrag extends Fragment{
     @Override
     public void onStop() {
         super.onStop();
-    getActivity().unregisterReceiver(mReceiver);
+   // getActivity().unregisterReceiver(mReceiver);
     }
 
     @Override
