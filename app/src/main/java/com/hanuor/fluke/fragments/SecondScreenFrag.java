@@ -35,13 +35,8 @@ import java.util.Set;
 import java.util.TimeZone;
 
 public class SecondScreenFrag extends Fragment{
-    int checkoir;
-    ArrayList<String> mIdstore;
-    ArrayList<String> mfinalStore;
+
     JSONServerGS  gs = new JSONServerGS();
-    Toolbar tb;
-
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

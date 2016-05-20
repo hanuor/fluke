@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.fragments.FirstScreenFrag;
 import com.hanuor.fluke.fragments.SecondScreenFrag;
+import com.hanuor.fluke.fragments.ThirdScreenFrag;
 
 /**
  * Created by Shantanu Johri on 07-05-2016.
@@ -19,7 +20,7 @@ import com.hanuor.fluke.fragments.SecondScreenFrag;
 public class FragHandler extends AppCompatActivity {
     Toolbar toolbar;
     Fragment fragOne;
-    Fragment fragTwo;
+    Fragment fragTwo, fragThree;
     TextView iv;
     TabLayout tabLayout;
     int ico[] = {R.drawable.ic_stat_music_search,R.drawable.ic_action_slideshare_logo};
@@ -42,8 +43,13 @@ public class FragHandler extends AppCompatActivity {
 
         fragOne = new FirstScreenFrag();
         fragTwo = new SecondScreenFrag();
-        tabLayout.addTab(tabLayout.newTab().setText("Search"),true);
+        fragThree = new ThirdScreenFrag();
+
+        tabLayout.addTab(tabLayout.newTab().setText("One"),true);
         tabLayout.addTab(tabLayout.newTab().setText("Two"));
+        tabLayout.addTab(tabLayout.newTab().setText("Profile"));
+
+        tabLayout.getTabAt(0).setIcon(ico[0]);
     }
 
     private void bindWidgetsWithAnEvent() {

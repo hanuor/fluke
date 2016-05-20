@@ -6,11 +6,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+        <com.hanuor.fluke.init.PathView
             android:layout_width="match_parent"
+            android:id="@+id/path"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:background="@drawable/mainscreen"/>
+
+            android:background="#66000000"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
