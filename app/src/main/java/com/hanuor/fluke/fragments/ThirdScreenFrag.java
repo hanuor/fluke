@@ -11,15 +11,5 @@ import android.view.ViewGroup;
  * Created by Shantanu Johri on 20-05-2016.
  */
 public class ThirdScreenFrag extends Fragment {
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 }

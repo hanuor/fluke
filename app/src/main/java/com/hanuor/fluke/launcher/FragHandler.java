@@ -20,8 +20,8 @@ import com.hanuor.fluke.fragments.ThirdScreenFrag;
 public class FragHandler extends AppCompatActivity {
     Toolbar toolbar;
     Fragment fragOne;
-    Fragment fragTwo, fragThree;
-    TextView iv;
+    Fragment fragTwo;
+    Fragment fragThree;
     TabLayout tabLayout;
     int ico[] = {R.drawable.ic_stat_music_search,R.drawable.ic_action_slideshare_logo};
 
@@ -43,11 +43,11 @@ public class FragHandler extends AppCompatActivity {
 
         fragOne = new FirstScreenFrag();
         fragTwo = new SecondScreenFrag();
-        fragThree = new ThirdScreenFrag();
+        //fragThree = new ThirdScreenFrag();
 
         tabLayout.addTab(tabLayout.newTab().setText("One"),true);
         tabLayout.addTab(tabLayout.newTab().setText("Two"));
-        tabLayout.addTab(tabLayout.newTab().setText("Profile"));
+        //tabLayout.addTab(tabLayout.newTab().setText("Profile"));
 
         tabLayout.getTabAt(0).setIcon(ico[0]);
     }

@@ -9,8 +9,6 @@
         android:fitsSystemWindows="true"
         android:background="#9FA8DA"
         android:layout_height="match_parent">
-    <include layout="@layout/toolbar_header"
-        android:id="@+id/toolbar"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cardList"
         android:layout_below="@+id/toolbar"
