@@ -6,17 +6,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +25,10 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -42,7 +44,6 @@ import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
-import com.hanuor.fluke.launcher.MainActivity;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
@@ -54,6 +55,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -76,12 +78,12 @@ public class FirstScreenFrag extends Fragment {
     String Doc_id = null;
     int oldback = 0, oldtext = 0;
     public String playingnow_song = null, playingnow_artist = null;
-    String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time"};
+    String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time","Matching over music. Please wait while we load the currently playing song"};
     LinearLayout bottom_desc;
     public String song_track  = null;
     CircleImageView artistImage;
-    MainActivity mMains = new MainActivity();
-
+    RelativeLayout initLayout;
+    LinearLayout finLayout;
     JSONManager jsonManager = new JSONManager();
     JSONServerGS jsonServerGS = new JSONServerGS();
 
@@ -107,18 +109,7 @@ public class FirstScreenFrag extends Fragment {
                 bundle = intent.getExtras();
                 Set<String> keys = intent.getExtras().keySet();
                 Log.d("taggy",""+bundle);
-
-
-/*
-            Log.d("moasa",""+keys.size()+"Bundle "+bundle);
-            for(int y=0;y<keys.size();y++){
-                Log.d("moasa",""+keys.toString());
-
-            }
-*/
-
-
-             Animation fadeIn = new AlphaAnimation(1, 0);
+                Animation fadeIn = new AlphaAnimation(1, 0);
             fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
             fadeIn.setDuration(1000);
             // spinKitView.setAnimation(fadeIn);
@@ -132,18 +123,10 @@ public class FirstScreenFrag extends Fragment {
             String ais = String.valueOf(ai);
             //Long mela = Long.getLong(ai);
             if(album!=null) {
-                Cursor cursor = getActivity().managedQuery(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                        new String[] {MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ALBUM_ART},
-                        MediaStore.Audio.Albums._ID+ "=?",
-                        new String[] {String.valueOf(ais)},
-                        null);
 
-                if (cursor.moveToFirst()) {
-                    String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
-                   Log.d("PAther",""+path);
-                    // do whatever you need to do
-                }
-                // Log.d("INERER",res.print()) ;
+                initLayout.setVisibility(View.INVISIBLE);
+                finLayout.setAnimation(fadeIn);
+                finLayout.setVisibility(View.VISIBLE);
                 playingnow_song = track;
                 song_track = track;
                 playingnow_artist = artist;
@@ -434,7 +417,7 @@ public class FirstScreenFrag extends Fragment {
         final String UID = otken.getUserId();
         // ivs = (ImageView) view.findViewById(R.id.ivs);
         coverImage = (ImageView) view.findViewById(R.id.coverImage);
-        // mtextswitch = (TextSwitcher) view.findViewById(R.id.textswitcher);
+        mtextswitch = (TextSwitcher) view.findViewById(R.id.textswitcher);
         artistName = (TextView) view.findViewById(R.id.artistName);
         artistSong = (TextView) view.findViewById(R.id.songName);
         coo = (TextView) view.findViewById(R.id.coo);
@@ -444,7 +427,8 @@ public class FirstScreenFrag extends Fragment {
         linesep = (TextView) view.findViewById(R.id.lineseparator);
         artistImage = (CircleImageView) view.findViewById(R.id.artistImage);
         bottom_desc = (LinearLayout) view.findViewById(R.id.bottom_desc);
-
+        initLayout = (RelativeLayout) view.findViewById(R.id.initial_layout);
+        finLayout = (LinearLayout) view.findViewById(R.id.final_layout);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_action_slideshare_logo);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -573,18 +557,16 @@ public class FirstScreenFrag extends Fragment {
 
 
 
-        /*mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
+        mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
                 TextView textView = new TextView(getActivity());
                 textView.setGravity(Gravity.CENTER);
-                textView.setTextColor(Color.parseColor("#90A4AE"));
+                textView.setTextColor(Color.parseColor("#4d490027"));
                 return textView;
             }
         });
-       *///
-
-      /*  Animation fadeIn = new AlphaAnimation(0, 1);
+        Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
         fadeIn.setDuration(2000);
 
@@ -601,15 +583,14 @@ public class FirstScreenFrag extends Fragment {
             public void run(){
                 //do something
                 Random r = new Random();
-                int i1 = r.nextInt(2 - 0) + 0;
+                int i1 = r.nextInt(3 - 0) + 0;
                 mtextswitch.setText(texts[i1]);
                 h.postDelayed(this, delay);
             }
         }, delay);
         return view;
-    }*/
-    return view;
     }
+
 
     private void getFBINFO(AccessToken otken) {
 

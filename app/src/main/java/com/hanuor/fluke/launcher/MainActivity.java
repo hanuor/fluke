@@ -25,6 +25,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.hanuor.fluke.R;
+import com.hanuor.fluke.init.PathView;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         mcallbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_main);
+        PathView path_view = (PathView) findViewById(R.id.path);
+        path_view.init();
         Profile mcheck = Profile.getCurrentProfile();
         if(mcheck!=null){
             AccessToken token = AccessToken.getCurrentAccessToken();

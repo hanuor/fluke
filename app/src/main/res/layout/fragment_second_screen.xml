@@ -2,17 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
 
+    android:fitsSystemWindows="true"
+    android:background="@drawable/back_grad"
     android:layout_height="match_parent"
     >
     <RelativeLayout
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
-        android:fitsSystemWindows="true"
         android:layout_height="match_parent">
-    <include layout="@layout/toolbar_header"
-        android:id="@+id/toolbar"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cardList"
-        android:layout_below="@+id/toolbar"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
