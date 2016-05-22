@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.TextView;
 
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.fragments.FirstScreenFrag;
@@ -43,11 +42,11 @@ public class FragHandler extends AppCompatActivity {
 
         fragOne = new FirstScreenFrag();
         fragTwo = new SecondScreenFrag();
-        //fragThree = new ThirdScreenFrag();
+        fragThree = new ThirdScreenFrag();
 
         tabLayout.addTab(tabLayout.newTab().setText("One"),true);
         tabLayout.addTab(tabLayout.newTab().setText("Two"));
-        //tabLayout.addTab(tabLayout.newTab().setText("Profile"));
+        tabLayout.addTab(tabLayout.newTab().setText("Profile"));
 
         tabLayout.getTabAt(0).setIcon(ico[0]);
     }
@@ -78,6 +77,9 @@ public class FragHandler extends AppCompatActivity {
                 break;
             case 1 :
                 replaceFragment(fragTwo);
+                break;
+            case 2 :
+                replaceFragment(fragThree);
                 break;
         }
     }

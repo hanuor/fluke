@@ -5,5 +5,83 @@
     xmlns:card_view="http://schemas.android.com/tools"
     android:background="#9FA8DA"
     android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="7dp"
+        app:cardBackgroundColor="#ffffff"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="7dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:civ_border_width="0.5dp"
+            android:layout_margin="5dp"
+            android:id="@+id/userImage"
+            app:civ_border_color="#212121"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.4dp"
+                android:layout_marginRight="21dp"
+                android:layout_marginLeft="21dp"
+                android:layout_below="@+id/userImage"
+                android:layout_marginTop="7dp"
+                android:background="#e0e0e0"
+                android:id="@+id/textView2" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#757575"
+                android:id="@+id/userName"
+                android:layout_marginTop="7dp"
+                android:text="Shantanu"
+                android:layout_below="@+id/textView2"
+                android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#9e9e9e"
+                android:textStyle="italic"
+                android:layout_marginTop="7dp"
+                android:text="shanjohri@sdad.cpm"
+                android:id="@+id/userEmail"
+                android:layout_below="@+id/userName"
+                android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Made with  in India"
+                android:layout_margin="1dp"
+                android:textStyle="italic"
+                android:id="@+id/loveInd"
+                android:layout_centerHorizontal="true"
+                android:textColor="#e0e0e0"
+                android:fontFamily="sans-serif-condensed"
+                android:layout_alignParentBottom="true"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.4dp"
+                android:layout_above="@+id/loveInd"
+                android:background="#eeeeee"
+                android:id="@+id/textView3" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fluke 2016. Hanuor"
+                android:fontFamily="sans-serif-condensed"
+
+                android:layout_centerHorizontal="true"
+                android:textColor="#e0e0e0"
+                android:layout_above="@+id/textView3"
+               />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>
