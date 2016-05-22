@@ -22,7 +22,7 @@ public class FragHandler extends AppCompatActivity {
     Fragment fragTwo;
     Fragment fragThree;
     TabLayout tabLayout;
-    int ico[] = {R.drawable.ic_stat_music_search,R.drawable.ic_action_slideshare_logo};
+    int ico[] = {R.drawable.ic_search_unsel,R.drawable.ic_action_slideshare_logo,R.drawable.ic_action_menu_button_of_three_lines,R.drawable.sd,R.drawable.ic_search_sel};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,11 +44,14 @@ public class FragHandler extends AppCompatActivity {
         fragTwo = new SecondScreenFrag();
         fragThree = new ThirdScreenFrag();
 
-        tabLayout.addTab(tabLayout.newTab().setText("One"),true);
-        tabLayout.addTab(tabLayout.newTab().setText("Two"));
-        tabLayout.addTab(tabLayout.newTab().setText("Profile"));
+        tabLayout.addTab(tabLayout.newTab(),true);
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
 
-        tabLayout.getTabAt(0).setIcon(ico[0]);
+        tabLayout.getTabAt(0).setIcon(ico[4]);
+        tabLayout.getTabAt(1).setIcon(ico[1]);
+
+        tabLayout.getTabAt(2).setIcon(ico[2]);
     }
 
     private void bindWidgetsWithAnEvent() {
@@ -56,10 +59,33 @@ public class FragHandler extends AppCompatActivity {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getPosition()== 2){
+
+                    tabLayout.getTabAt(2).setIcon(ico[3]);
+                    //tabLayout.getTabAt(1).setIcon(ico[1]);
+                    tabLayout.getTabAt(0).setIcon(ico[0]);
+
+                }else if(tab.getPosition() == 1){
+                   // tabLayout.getTabAt(1).setIcon(ico[1]);
+                   // tabLayout.getTabAt(2).setIcon(ico[2]);
+                    tabLayout.getTabAt(0).setIcon(ico[0]);
+
+                }else{
+                    tabLayout.getTabAt(0).setIcon(ico[4]);
+
+                }
                 setCurrentTabFragment(tab.getPosition());
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+
+                if(tab.getPosition()== 2){
+
+                    tabLayout.getTabAt(2).setIcon(ico[2]);
+                }else if(tab.getPosition() == 0){
+                    tabLayout.getTabAt(0).setIcon(ico[0]);
+                }
+
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
