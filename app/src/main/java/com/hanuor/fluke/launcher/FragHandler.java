@@ -22,7 +22,7 @@ public class FragHandler extends AppCompatActivity {
     Fragment fragTwo;
     Fragment fragThree;
     TabLayout tabLayout;
-    int ico[] = {R.drawable.ic_search_unsel,R.drawable.ic_action_slideshare_logo,R.drawable.ic_action_menu_button_of_three_lines,R.drawable.sd,R.drawable.ic_search_sel};
+    int ico[] = {R.drawable.ic_search_unsel,R.drawable.ic_action_slideshare_logo,R.drawable.ic_action_menu_button_of_three_lines,R.drawable.sd,R.drawable.ic_search_sel,R.drawable.ic_action_dsshare_logo};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class FragHandler extends AppCompatActivity {
                     tabLayout.getTabAt(0).setIcon(ico[0]);
 
                 }else if(tab.getPosition() == 1){
-                   // tabLayout.getTabAt(1).setIcon(ico[1]);
+                    tabLayout.getTabAt(1).setIcon(ico[5]);
                    // tabLayout.getTabAt(2).setIcon(ico[2]);
                     tabLayout.getTabAt(0).setIcon(ico[0]);
 
@@ -84,6 +84,8 @@ public class FragHandler extends AppCompatActivity {
                     tabLayout.getTabAt(2).setIcon(ico[2]);
                 }else if(tab.getPosition() == 0){
                     tabLayout.getTabAt(0).setIcon(ico[0]);
+                }else{
+                    tabLayout.getTabAt(1).setIcon(ico[1]);
                 }
 
             }
