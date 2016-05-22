@@ -2,6 +2,7 @@ package com.hanuor.fluke.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         this.timeys = timeys;
 
         this.c = c;
+        Log.d("REDLIGHTS",""+fbNames.size());
     }
 
 

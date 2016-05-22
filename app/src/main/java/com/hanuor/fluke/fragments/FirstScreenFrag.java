@@ -25,6 +25,7 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -43,7 +44,6 @@ import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
-import com.hanuor.fluke.launcher.MainActivity;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
@@ -82,8 +82,8 @@ public class FirstScreenFrag extends Fragment {
     LinearLayout bottom_desc;
     public String song_track  = null;
     CircleImageView artistImage;
-    MainActivity mMains = new MainActivity();
-
+    RelativeLayout initLayout;
+    LinearLayout finLayout;
     JSONManager jsonManager = new JSONManager();
     JSONServerGS jsonServerGS = new JSONServerGS();
 
@@ -123,6 +123,10 @@ public class FirstScreenFrag extends Fragment {
             String ais = String.valueOf(ai);
             //Long mela = Long.getLong(ai);
             if(album!=null) {
+
+                initLayout.setVisibility(View.INVISIBLE);
+                finLayout.setAnimation(fadeIn);
+                finLayout.setVisibility(View.VISIBLE);
                 playingnow_song = track;
                 song_track = track;
                 playingnow_artist = artist;
@@ -423,7 +427,8 @@ public class FirstScreenFrag extends Fragment {
         linesep = (TextView) view.findViewById(R.id.lineseparator);
         artistImage = (CircleImageView) view.findViewById(R.id.artistImage);
         bottom_desc = (LinearLayout) view.findViewById(R.id.bottom_desc);
-
+        initLayout = (RelativeLayout) view.findViewById(R.id.initial_layout);
+        finLayout = (LinearLayout) view.findViewById(R.id.final_layout);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_action_slideshare_logo);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -176,11 +176,12 @@ public class SecondScreenFrag extends Fragment{
                             fbtimey.add("Listening to this now");
                         }else if(difference >10000 && difference < 100000){
                             fbtimey.add("Just a few seconds ago");
-                        }else if(difference > 100000 && difference <1000000){
+                        }else if(difference > 100000 && difference <10000000){
                             fbtimey.add("Minutes ago");
                         }else if (difference >10000000){
                             fbtimey.add("Long time ago");
                         }else{
+                            Log.d("NNN",""+difference);
                             fbtimey.add("NNN");
                         }
                     }
