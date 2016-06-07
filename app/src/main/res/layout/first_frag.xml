@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 app:arcColor="#ffffff"
                 app:reusable="true"
-                app:finalIcon="@drawable/ic_action_dsshare_logo"
+                app:finalIcon="@drawable/ic_action_approve_sign"
                 app:arcWidth="3dp"
                 app:roundedStroke="true"
                 android:layout_margin="7dp"

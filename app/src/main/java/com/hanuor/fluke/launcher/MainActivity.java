@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     public static String fbImage;
 
     public static String fbName;
-
     SocialService msocialserice;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
