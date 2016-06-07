@@ -1,16 +1,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:fitsSystemWindows="true"
     android:background="@drawable/back_grad"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.CubeGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            app:SpinKit_Color="#D9490027" />
+        <TextSwitcher
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textswitcher"
+            android:layout_margin="7dp"
+            android:layout_below="@+id/spin_kit">
+        </TextSwitcher>
+        <android.support.v7.widget.RecyclerView
         android:id="@+id/cardList"
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"

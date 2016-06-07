@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +22,9 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.TextSwitcher;
+import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.adapters.ResultAdapter;
@@ -31,12 +37,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 
 public class SecondScreenFrag extends Fragment{
 
     JSONServerGS  gs = new JSONServerGS();
+    String texts[] = {"A list of people listening to the same music goes here","Can't find anyone here? Did you hit the match button?","Try another song if you can't find anyone here"};
+    TextSwitcher mtextswitch;
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -98,8 +107,43 @@ public class SecondScreenFrag extends Fragment{
         */final RecyclerView recList = (RecyclerView) view.findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        mtextswitch = (TextSwitcher) view.findViewById(R.id.textswitcher);
+
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
+
+        mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView textView = new TextView(getActivity());
+                textView.setGravity(Gravity.CENTER);
+                textView.setTextColor(Color.parseColor("#4d490027"));
+                return textView;
+            }
+        });
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(2000);
+
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(3000);
+        mtextswitch.setInAnimation(fadeIn);
+        mtextswitch.setOutAnimation(fadeOut);
+
+        final Handler h = new Handler();
+        final int delay = 3000; //milliseconds
+
+        h.postDelayed(new Runnable(){
+            public void run(){
+                //do something
+                Random r = new Random();
+                int i1 = r.nextInt(3 - 0) + 0;
+                mtextswitch.setText(texts[i1]);
+                h.postDelayed(this, delay);
+            }
+        }, delay);
+
 
         ServerTasker s = (ServerTasker) new ServerTasker(getActivity(), new ServerInterface() {
             @Override
