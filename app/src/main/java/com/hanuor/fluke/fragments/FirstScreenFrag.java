@@ -49,6 +49,7 @@ import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
+import com.hanuor.fluke.launcher.FragHandler;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
@@ -76,6 +77,7 @@ public class FirstScreenFrag extends Fragment {
     TextView linesep;
     TextView genre, genrename;
     TextView coo, cooname;
+    FragHandler mfraghandler = new FragHandler();
     FloatingActionButton fab;
     int insert_flag;
     String fbImageURL = null;
@@ -448,6 +450,7 @@ public class FirstScreenFrag extends Fragment {
                     @Override
                     public void run() {
                        // my_button.setBackgroundResource(R.drawable.defaultcard);
+
                         fabProgressCircle.beginFinalAnimation();
                        fabProgressCircle.attachListener(new FABProgressListener() {
                            @Override
@@ -460,7 +463,11 @@ public class FirstScreenFrag extends Fragment {
                                ft.replace(R.id.frame_container, fragment);
                                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                                ft.commit();
-                            }
+                              // mfraghandler.markerChange(1,true);
+
+
+
+                           }
                        });
                         // fabProgressCircle.hide();
                     }
@@ -477,7 +484,7 @@ public class FirstScreenFrag extends Fragment {
                 jsonManager.setFbUserpic(jsonServerGS.getFbUserpic());
                 Log.d("FBI JSS",""+jsonServerGS.getFbName());
                 final String jsons = gson.toJson(jsonManager,JSONManager.class);
-          FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
+                 FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
                                     @Override
                                     public void onSuccess(Object o) {
                                         Log.d("Success",""+o.toString());

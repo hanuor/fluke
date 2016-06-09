@@ -44,7 +44,14 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
-            String cmd = intent.getStringExtra("command");
+
+            String cmd = null;
+            try {
+                cmd = intent.getStringExtra("command");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             Log.d("mIntentReceiver.onR", action + " / " + cmd+" URI "+intent.getLongExtra("id",-1));
             Bundle bundle = intent.getExtras();
             Set<String> keys = intent.getExtras().keySet();

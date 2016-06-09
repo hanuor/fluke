@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -46,6 +47,8 @@ public class SecondScreenFrag extends Fragment{
     JSONServerGS  gs = new JSONServerGS();
     String texts[] = {"A list of people listening to the same music goes here","Can't find anyone here? Did you hit the match button?","Try another song if you can't find anyone here"};
     TextSwitcher mtextswitch;
+    RelativeLayout loading;
+    RecyclerView cardList;
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -108,6 +111,8 @@ public class SecondScreenFrag extends Fragment{
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         mtextswitch = (TextSwitcher) view.findViewById(R.id.textswitcher);
+        loading = (RelativeLayout) view.findViewById(R.id.loading);
+        cardList = (RecyclerView) view.findViewById(R.id.cardList);
 
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
@@ -158,6 +163,7 @@ public class SecondScreenFrag extends Fragment{
                // Toast.makeText(getActivity(), "Yipeee", Toast.LENGTH_SHORT).show();
                 Log.d("STRRR",""+fetchAll.size());
                 //Do your task here
+
                 for(int i=0;i<fetchAll.size();i++) {
                     Lister = fetchAll.get(i).split(" ");
 
@@ -238,6 +244,8 @@ public class SecondScreenFrag extends Fragment{
 
              ResultAdapter rS = new ResultAdapter(getActivity(),good,fetchDetails,artistIma,fbtimey);
                 recList.setAdapter(rS);
+                recList.setVisibility(View.VISIBLE);
+                loading.setVisibility(View.GONE);
 
                // 2016-05-19T16:39:54.322Z
 
