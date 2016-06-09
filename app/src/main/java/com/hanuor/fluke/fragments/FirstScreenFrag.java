@@ -13,10 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.Gravity;
@@ -455,7 +452,7 @@ public class FirstScreenFrag extends Fragment {
                        fabProgressCircle.attachListener(new FABProgressListener() {
                            @Override
                            public void onFABProgressAnimationEnd() {
-                               Snackbar.make(view,"Posted song on server successfully",Snackbar.LENGTH_SHORT).show();
+                      /*         Snackbar.make(view,"Posted song on server successfully",Snackbar.LENGTH_SHORT).show();
                                SecondScreenFrag fragment = new SecondScreenFrag();
 
                                FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -464,7 +461,7 @@ public class FirstScreenFrag extends Fragment {
                                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                                ft.commit();
                               // mfraghandler.markerChange(1,true);
-
+*/
 
 
                            }

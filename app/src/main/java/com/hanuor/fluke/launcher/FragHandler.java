@@ -1,28 +1,24 @@
 package com.hanuor.fluke.launcher;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.View;
 
+import com.github.fabtransitionactivity.SheetLayout;
 import com.hanuor.fluke.R;
-import com.hanuor.fluke.fragments.FirstScreenFrag;
-import com.hanuor.fluke.fragments.SecondScreenFrag;
-import com.hanuor.fluke.fragments.ThirdScreenFrag;
 
 /**
  * Created by Shantanu Johri on 07-05-2016.
  */
-public class FragHandler extends AppCompatActivity {
+public class FragHandler extends AppCompatActivity implements SheetLayout.OnFabAnimationEndListener {
     Toolbar toolbar;
-    Fragment fragOne;
-    Fragment fragTwo;
-    Fragment fragThree;
-    TabLayout tabLayout;
+    FloatingActionButton fab1,fab2,fab3;
+    SheetLayout msheetLayout;
+
+    private static final int REQUEST_CODE = 1;
     int ico[] = {R.drawable.ic_search_unsel,R.drawable.ic_action_slideshare_logo,R.drawable.ic_action_menu_button_of_three_lines,R.drawable.sd,R.drawable.ic_search_sel,R.drawable.ic_action_dsshare_logo};
 
     @Override
@@ -33,13 +29,45 @@ public class FragHandler extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_header); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
-        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+      //  tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
 
-        bindWidgetsWithAnEvent();
         setupTabLayout();
+
     }
 
     private void setupTabLayout() {
+        msheetLayout = (SheetLayout) findViewById(R.id.bottom_sheet);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab);
+        //msheetLayout.setFab(fab3);
+
+        fab1.setImageResource(ico[0]);
+        fab1.setEnabled(false);
+        fab2.setImageResource(ico[1]);
+
+        fab3.setImageResource(ico[2]);
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+              //  msheetLayout.expandFab();
+            }
+        });
+    }
+
+    @Override
+    public void onFabAnimationEnd() {
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE){
+          //  msheetLayout.contractFab();
+        }
+
+    /*private void setupTabLayout() {
 
         fragOne = new FirstScreenFrag();
         fragTwo = new SecondScreenFrag();
@@ -122,5 +150,6 @@ public class FragHandler extends AppCompatActivity {
         ft.commit();
     }
 
-
+*/
+}
 }
