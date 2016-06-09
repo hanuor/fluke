@@ -13,7 +13,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.Gravity;
@@ -38,12 +41,15 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.github.jorgecastilloprz.FABProgressCircle;
+import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.google.gson.Gson;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
+import com.hanuor.fluke.launcher.FragHandler;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
@@ -71,10 +77,12 @@ public class FirstScreenFrag extends Fragment {
     TextView linesep;
     TextView genre, genrename;
     TextView coo, cooname;
+    FragHandler mfraghandler = new FragHandler();
     FloatingActionButton fab;
     int insert_flag;
     String fbImageURL = null;
     AccessToken otken;
+    FABProgressCircle fabProgressCircle;
     String Doc_id = null;
     int oldback = 0, oldtext = 0;
     public String playingnow_song = null, playingnow_artist = null;
@@ -431,9 +439,39 @@ public class FirstScreenFrag extends Fragment {
         finLayout = (LinearLayout) view.findViewById(R.id.final_layout);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_action_slideshare_logo);
+        fabProgressCircle = (FABProgressCircle) view.findViewById(R.id.fabProgressCircle);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
+                fabProgressCircle.show();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                       // my_button.setBackgroundResource(R.drawable.defaultcard);
+
+                        fabProgressCircle.beginFinalAnimation();
+                       fabProgressCircle.attachListener(new FABProgressListener() {
+                           @Override
+                           public void onFABProgressAnimationEnd() {
+                               Snackbar.make(view,"Posted song on server successfully",Snackbar.LENGTH_SHORT).show();
+                               SecondScreenFrag fragment = new SecondScreenFrag();
+
+                               FragmentManager fm = getActivity().getSupportFragmentManager();
+                               FragmentTransaction ft = fm.beginTransaction();
+                               ft.replace(R.id.frame_container, fragment);
+                               ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                               ft.commit();
+                              // mfraghandler.markerChange(1,true);
+
+
+
+                           }
+                       });
+                        // fabProgressCircle.hide();
+                    }
+                }, 2000);
                 final String collection_name = UID;
                 //final StringBuilder vs = new StringBuilder();
                 jsonManager.setArtistImage(jsonServerGS.getArtistimage());
@@ -445,12 +483,8 @@ public class FirstScreenFrag extends Fragment {
                 jsonManager.setId(jsonServerGS.getId());
                 jsonManager.setFbUserpic(jsonServerGS.getFbUserpic());
                 Log.d("FBI JSS",""+jsonServerGS.getFbName());
-
-
-
-
                 final String jsons = gson.toJson(jsonManager,JSONManager.class);
-          FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
+                 FlukeApp42Database.ss.findAllDocuments(FlukeApp42Database.database, FlukeApp42Database.datacollectionId, new App42CallBack() {
                                     @Override
                                     public void onSuccess(Object o) {
                                         Log.d("Success",""+o.toString());
@@ -463,6 +497,7 @@ public class FirstScreenFrag extends Fragment {
                                                 @Override
                                                 public void onSuccess(Object o) {
                                                     Log.d("DoneY","VAMOS");
+
 
                                                 }
 

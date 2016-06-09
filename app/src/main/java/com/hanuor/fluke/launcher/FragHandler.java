@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.fragments.FirstScreenFrag;
@@ -54,7 +55,8 @@ public class FragHandler extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(ico[2]);
     }
 
-    private void bindWidgetsWithAnEvent() {
+    public void bindWidgetsWithAnEvent() {
+        Log.d("COUNT",""+tabLayout.getTabCount());
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -94,8 +96,7 @@ public class FragHandler extends AppCompatActivity {
             }
         });
     }
-
-    private void setCurrentTabFragment(int position) {
+    public void setCurrentTabFragment(int position) {
 
 
         switch (position)
@@ -104,6 +105,7 @@ public class FragHandler extends AppCompatActivity {
                 replaceFragment(fragOne);
                 break;
             case 1 :
+
                 replaceFragment(fragTwo);
                 break;
             case 2 :
