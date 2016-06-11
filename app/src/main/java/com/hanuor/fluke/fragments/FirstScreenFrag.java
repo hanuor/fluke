@@ -177,10 +177,6 @@ public class FirstScreenFrag extends Fragment {
             //Api Appending for artist picture
             artistName.setText(""+album);
             artistSong.setText(""+track);
-            StringBuilder m = new StringBuilder();
-            m.append(ApiName.LASTFM_ARTIST);
-            m.append(album);
-            m.append(ApiName.LASTFM_APIFORMAT);
 
             //Api appending for album picture
             StringBuilder ck = new StringBuilder();
