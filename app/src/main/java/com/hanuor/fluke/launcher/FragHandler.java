@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -43,6 +44,7 @@ import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
+import com.hanuor.fluke.fragments.ThirdScreenFrag;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
@@ -204,7 +206,7 @@ public class FragHandler extends AppCompatActivity {
         finLayout = (LinearLayout) findViewById(R.id.final_layout);
         fab = (FloatingActionButton) findViewById(R.id.fab3);
         fab.setImageResource(R.drawable.ic_action_slideshare_logo);
-        fabProgressCircle = (FABProgressCircle) findViewById(R.id.fabProgressCircle);
+        fabProgressCircle = (FABProgressCircle) findViewById(R.id.ProgressCirclefab);
 
 
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
@@ -217,6 +219,15 @@ public class FragHandler extends AppCompatActivity {
         fab2.setImageResource(ico[1]);
         fab3.setImageResource(ico[2]);
         fab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view,"Clicked",Snackbar.LENGTH_SHORT).show();
+                Intent srt = new Intent(FragHandler.this, ThirdScreenFrag.class);
+                startActivity(srt);
+
+            }
+        });
+        fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fabProgressCircle.show();

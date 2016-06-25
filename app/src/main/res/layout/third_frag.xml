@@ -5,6 +5,11 @@
     xmlns:card_view="http://schemas.android.com/tools"
     android:background="@drawable/back_grad"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/CV"
+        android:layout_height="match_parent">
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_marginTop="30dp"
@@ -84,9 +89,22 @@
                 android:layout_centerHorizontal="true"
                 android:textColor="#e0e0e0"
                 android:layout_above="@+id/textView3"
+
                />
 
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/backtohome"
+                android:src="@drawable/ic_search_unsel"
+                android:layout_alignBottom="@+id/textView3"
+                android:layout_alignRight="@+id/textView2"
+                android:layout_alignEnd="@+id/textView2" />
+
         </RelativeLayout>
+
     </android.support.v7.widget.CardView>
 
+
+    </RelativeLayout>
 </RelativeLayout>
