@@ -21,6 +21,7 @@ android {
     }
 }
 repositories {
+    mavenCentral()
     maven { url "https://jitpack.io" }
 }
 
@@ -33,10 +34,10 @@ dependencies {
     compile files('libs/App42_ANDROID_SDK_3.8.jar')
     compile 'com.android.support:palette-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.mcxiaoke.volley:library-aar:1.0.+'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:support-v4:23.2.1'
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
 }
