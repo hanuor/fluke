@@ -11,8 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -27,6 +29,7 @@ import com.hanuor.fluke.adapters.ResultAdapter;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
 import com.hanuor.fluke.interfaces.ServerInterface;
+import com.hanuor.fluke.launcher.FragHandler;
 import com.hanuor.fluke.serverhandler.ServerTasker;
 
 import java.text.SimpleDateFormat;
@@ -44,11 +47,18 @@ public class SecondScreenFrag extends AppCompatActivity{
     TextSwitcher mtextswitch;
     RelativeLayout loading;
     RecyclerView cardList;
+    Toolbar toolbar;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_second_screen);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Listening to this");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         MusicHits mh = new MusicHits();
         IntentFilter ifla = mh.searchsong();
         registerReceiver(mReceiver, ifla);
@@ -243,7 +253,18 @@ public class SecondScreenFrag extends AppCompatActivity{
     };
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            // close this activity and return to preview activity (if there is any)
+            Intent sar = new Intent(SecondScreenFrag.this, FragHandler.class);
+            sar.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(sar);
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 
    /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -264,7 +285,7 @@ public class SecondScreenFrag extends AppCompatActivity{
     @Override
     public void onPause() {
         super.onPause();
-        unregisterReceiver(mReceiver);
+//        unregisterReceiver(mReceiver);
         // onDestroy();
     }
 

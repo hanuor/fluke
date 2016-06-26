@@ -6,8 +6,20 @@
     android:fitsSystemWindows="true"
     android:background="@drawable/back_grad"
     android:layout_height="match_parent">
-    <RelativeLayout
-        android:layout_marginTop="30dp"
+    <android.support.v7.widget.Toolbar
+
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+
+    android:background="#00ffffff"
+    android:minHeight="?attr/actionBarSize"
+    android:titleTextColor="#ffffff">
+
+</android.support.v7.widget.Toolbar>
+
+<RelativeLayout
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <RelativeLayout

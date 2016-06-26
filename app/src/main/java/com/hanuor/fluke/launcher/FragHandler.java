@@ -264,6 +264,7 @@ public class FragHandler extends AppCompatActivity {
                     }
                 }, 2000);
                 //final StringBuilder vs = new StringBuilder();
+                Log.d("IAMHERE","ss");
                 jsonManager.setArtistImage(jsonServerGS.getArtistimage());
                 jsonManager.setArtist(jsonServerGS.getArtist());
                 jsonManager.setAlbumImage(jsonServerGS.getAlbumimage());

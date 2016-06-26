@@ -166,19 +166,6 @@
     android:textStyle="italic"
     android:layout_toRightOf="@+id/genre"/>
 
-            <com.github.jorgecastilloprz.FABProgressCircle
-                android:id="@+id/fabProgressCircle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:arcColor="#ffffff"
-                app:reusable="true"
-                app:finalIcon="@drawable/ic_action_approve_sign"
-                app:arcWidth="3dp"
-                app:roundedStroke="true"
-                android:layout_margin="7dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                >
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,9 +173,8 @@
                 android:layout_margin="7dp"
                 android:id="@+id/fab"
                 />
-            </com.github.jorgecastilloprz.FABProgressCircle>
 
-        </RelativeLayout>
+</RelativeLayout>
     </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

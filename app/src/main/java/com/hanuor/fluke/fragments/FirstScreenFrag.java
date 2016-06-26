@@ -436,7 +436,7 @@ public class FirstScreenFrag extends Fragment {
         finLayout = (LinearLayout) view.findViewById(R.id.final_layout);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_action_slideshare_logo);
-        fabProgressCircle = (FABProgressCircle) view.findViewById(R.id.fabProgressCircle);
+      //  fabProgressCircle = (FABProgressCircle) view.findViewById(R.id.fabProgressCircle);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
