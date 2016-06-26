@@ -8,17 +8,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -42,77 +37,30 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 
-public class SecondScreenFrag extends Fragment{
+public class SecondScreenFrag extends AppCompatActivity{
 
     JSONServerGS  gs = new JSONServerGS();
     String texts[] = {"A list of people listening to the same music goes here","Can't find anyone here? Did you hit the match button?","Try another song if you can't find anyone here"};
     TextSwitcher mtextswitch;
     RelativeLayout loading;
     RecyclerView cardList;
+
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_second_screen);
         MusicHits mh = new MusicHits();
         IntentFilter ifla = mh.searchsong();
-        getActivity().registerReceiver(mReceiver, ifla);
+        registerReceiver(mReceiver, ifla);
 
+        //
 
-    }
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            Bundle bundle = null;
-            try {
-                String action = intent.getAction();
-                String cmd = intent.getStringExtra("command");
-                Log.d("mIntentReceiver.onR", action + " / " + cmd+" URI "+intent.getLongExtra("id",-1));
-                bundle = intent.getExtras();
-                Set<String> keys = intent.getExtras().keySet();
-                Log.d("taggy",""+bundle);
-                Animation fadeIn = new AlphaAnimation(1, 0);
-                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-                fadeIn.setDuration(1000);
-                // spinKitView.setAnimation(fadeIn);
-                //spinKitView.setVisibility(View.INVISIBLE);
-                String artist = intent.getStringExtra("artist");
-                String album = intent.getStringExtra("album");
-                String track = intent.getStringExtra("track");
-                gs.setArtist(artist);
-                gs.setTrack(track);
-                Long ai = (Long) bundle.get("albumId");
-                Log.d("Toaster",""+ai);
-                String ais = String.valueOf(ai);
-
-                Log.d("Music",artist+":"+album+":     SADASDASDA  "+track+"ablum id"+" "+bundle.get("albumId"));
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    };
-
-
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_second_screen, container, false);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_header);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        /*
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        */final RecyclerView recList = (RecyclerView) view.findViewById(R.id.cardList);
+        final RecyclerView recList = (RecyclerView) findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        mtextswitch = (TextSwitcher) view.findViewById(R.id.textswitcher);
-        loading = (RelativeLayout) view.findViewById(R.id.loading);
-        cardList = (RecyclerView) view.findViewById(R.id.cardList);
+        LinearLayoutManager llm = new LinearLayoutManager(SecondScreenFrag.this);
+        mtextswitch = (TextSwitcher) findViewById(R.id.textswitcher);
+        loading = (RelativeLayout) findViewById(R.id.loading);
+        cardList = (RecyclerView) findViewById(R.id.cardList);
 
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
@@ -120,7 +68,7 @@ public class SecondScreenFrag extends Fragment{
         mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
-                TextView textView = new TextView(getActivity());
+                TextView textView = new TextView(SecondScreenFrag.this);
                 textView.setGravity(Gravity.CENTER);
                 textView.setTextColor(Color.parseColor("#4d490027"));
                 return textView;
@@ -150,7 +98,7 @@ public class SecondScreenFrag extends Fragment{
         }, delay);
 
 
-        ServerTasker s = (ServerTasker) new ServerTasker(getActivity(), new ServerInterface() {
+        ServerTasker s = (ServerTasker) new ServerTasker(SecondScreenFrag.this, new ServerInterface() {
             @Override
             public void fetchalldetails(ArrayList<String> fetchAll) {
 
@@ -160,7 +108,7 @@ public class SecondScreenFrag extends Fragment{
                 ArrayList<String> artistIma = new ArrayList<String>();
 
                 ArrayList<String> fbtimey = new ArrayList<String>();
-               // Toast.makeText(getActivity(), "Yipeee", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getActivity(), "Yipeee", Toast.LENGTH_SHORT).show();
                 Log.d("STRRR",""+fetchAll.size());
                 //Do your task here
 
@@ -212,7 +160,7 @@ public class SecondScreenFrag extends Fragment{
                         calendar.set(Calendar.MINUTE, 0);
                         String kow = new SimpleDateFormat("HH:mm").format(new Date()).toString();
 
-                       // String omk1 = new SimpleDateFormat("HH:mm").format(calendar.getTime()).toString();
+                        // String omk1 = new SimpleDateFormat("HH:mm").format(calendar.getTime()).toString();
                         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
                         Date date1 = format.parse(kow);
                         Log.d("Origi",""+kow);
@@ -242,12 +190,12 @@ public class SecondScreenFrag extends Fragment{
                 }
                 Log.d("MMMMMMM",""+fbtimey.size());
 
-             ResultAdapter rS = new ResultAdapter(getActivity(),good,fetchDetails,artistIma,fbtimey);
+                ResultAdapter rS = new ResultAdapter(SecondScreenFrag.this,good,fetchDetails,artistIma,fbtimey);
                 recList.setAdapter(rS);
                 recList.setVisibility(View.VISIBLE);
                 loading.setVisibility(View.GONE);
 
-               // 2016-05-19T16:39:54.322Z
+                // 2016-05-19T16:39:54.322Z
 
             }
         }).execute();
@@ -255,10 +203,49 @@ public class SecondScreenFrag extends Fragment{
 
 
 
-        return view;
+
     }
 
-    @Override
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            Bundle bundle = null;
+            try {
+                String action = intent.getAction();
+                String cmd = intent.getStringExtra("command");
+                Log.d("mIntentReceiver.onR", action + " / " + cmd+" URI "+intent.getLongExtra("id",-1));
+                bundle = intent.getExtras();
+                Set<String> keys = intent.getExtras().keySet();
+                Log.d("taggy",""+bundle);
+                Animation fadeIn = new AlphaAnimation(1, 0);
+                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+                fadeIn.setDuration(1000);
+                // spinKitView.setAnimation(fadeIn);
+                //spinKitView.setVisibility(View.INVISIBLE);
+                String artist = intent.getStringExtra("artist");
+                String album = intent.getStringExtra("album");
+                String track = intent.getStringExtra("track");
+                gs.setArtist(artist);
+                gs.setTrack(track);
+                Long ai = (Long) bundle.get("albumId");
+                Log.d("Toaster",""+ai);
+                String ais = String.valueOf(ai);
+
+                Log.d("Music",artist+":"+album+":     SADASDASDA  "+track+"ablum id"+" "+bundle.get("albumId"));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
+
+
+
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case android.R.id.home:
@@ -267,7 +254,7 @@ public class SecondScreenFrag extends Fragment{
         return super.onOptionsItemSelected(item);
     }
 
-
+*/
     @Override
     public void onStop() {
         super.onStop();
@@ -277,7 +264,7 @@ public class SecondScreenFrag extends Fragment{
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().unregisterReceiver(mReceiver);
+        unregisterReceiver(mReceiver);
         // onDestroy();
     }
 

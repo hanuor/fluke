@@ -44,6 +44,7 @@ import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
+import com.hanuor.fluke.fragments.SecondScreenFrag;
 import com.hanuor.fluke.fragments.ThirdScreenFrag;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
 import com.hanuor.fluke.serverhandler.JSONManager;
@@ -241,6 +242,10 @@ public class FragHandler extends AppCompatActivity {
                         fabProgressCircle.attachListener(new FABProgressListener() {
                             @Override
                             public void onFABProgressAnimationEnd() {
+
+
+                                Intent sees = new Intent(FragHandler.this, SecondScreenFrag.class);
+                                startActivity(sees);
                       /*         Snackbar.make(view,"Posted song on server successfully",Snackbar.LENGTH_SHORT).show();
                                SecondScreenFrag fragment = new SecondScreenFrag();
 

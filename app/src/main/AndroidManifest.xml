@@ -22,8 +22,10 @@
 
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".launcher.FragHandler"/>
-
+        <activity android:name=".launcher.FragHandler"
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleInstance"/>
+        <activity android:name=".fragments.SecondScreenFrag"/>
         <activity android:name=".fragments.ThirdScreenFrag"/>
         <activity android:name=".launcher.MainActivity">
             <intent-filter>

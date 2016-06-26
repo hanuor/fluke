@@ -69,6 +69,7 @@ public class ThirdScreenFrag extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent sar = new Intent(ThirdScreenFrag.this, FragHandler.class);
+                sar.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(sar);
             }
         });
