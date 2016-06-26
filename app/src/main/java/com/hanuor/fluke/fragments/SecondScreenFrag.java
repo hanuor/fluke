@@ -265,21 +265,9 @@ public class SecondScreenFrag extends AppCompatActivity{
 
         return super.onOptionsItemSelected(item);
     }
-
-   /* @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case android.R.id.home:
-                getActivity().onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-*/
     @Override
     public void onStop() {
         super.onStop();
-   // getActivity().unregisterReceiver(mReceiver);
     }
 
     @Override

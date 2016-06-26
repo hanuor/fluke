@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -67,9 +66,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Shantanu Johri on 07-05-2016.
  */
 public class FragHandler extends AppCompatActivity {
-    Toolbar toolbar;
-    FloatingActionButton fab1,fab2,fab3;
-    private static final int REQUEST_CODE = 1;
+    FloatingActionButton fab2,fab3;
     int ico[] = {R.drawable.ic_search_unsel,R.drawable.ic_action_slideshare_logo,R.drawable.ic_action_menu_button_of_three_lines,R.drawable.sd,R.drawable.ic_search_sel,R.drawable.ic_action_dsshare_logo};
     private TextSwitcher mtextswitch;
     ImageView coverImage;
@@ -80,10 +77,8 @@ public class FragHandler extends AppCompatActivity {
     TextView coo, cooname;
     FloatingActionButton fab;
     int insert_flag;
-    String fbImageURL = null;
     AccessToken otken;
     FABProgressCircle fabProgressCircle;
-    String Doc_id = null;
     int oldback = 0, oldtext = 0;
     public String playingnow_song = null, playingnow_artist = null;
     String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time","Matching over music. Please wait while we load the currently playing song"};
@@ -210,13 +205,8 @@ public class FragHandler extends AppCompatActivity {
         fabProgressCircle = (FABProgressCircle) findViewById(R.id.ProgressCirclefab);
 
 
-        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         fab3 = (FloatingActionButton) findViewById(R.id.fab3);
-        //msheetLayout.setFab(fab3);
-
-        fab1.setImageResource(ico[0]);
-        fab1.setEnabled(false);
         fab2.setImageResource(ico[1]);
         fab3.setImageResource(ico[2]);
         fab3.setOnClickListener(new View.OnClickListener() {
@@ -246,24 +236,10 @@ public class FragHandler extends AppCompatActivity {
 
                                 Intent sees = new Intent(FragHandler.this, SecondScreenFrag.class);
                                 startActivity(sees);
-                      /*         Snackbar.make(view,"Posted song on server successfully",Snackbar.LENGTH_SHORT).show();
-                               SecondScreenFrag fragment = new SecondScreenFrag();
-
-                               FragmentManager fm = getActivity().getSupportFragmentManager();
-                               FragmentTransaction ft = fm.beginTransaction();
-                               ft.replace(R.id.frame_container, fragment);
-                               ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                               ft.commit();
-                              // mfraghandler.markerChange(1,true);
-*/
-
-
                             }
                         });
-                        // fabProgressCircle.hide();
                     }
                 }, 2000);
-                //final StringBuilder vs = new StringBuilder();
                 Log.d("IAMHERE","ss");
                 jsonManager.setArtistImage(jsonServerGS.getArtistimage());
                 jsonManager.setArtist(jsonServerGS.getArtist());
