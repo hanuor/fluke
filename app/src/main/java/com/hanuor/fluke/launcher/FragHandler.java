@@ -122,7 +122,7 @@ public class FragHandler extends AppCompatActivity {
         mtextswitch.setOutAnimation(fadeOut);
 
         final Handler h = new Handler();
-        final int delay = 3000; //milliseconds
+        final int delay = 4000; //milliseconds
 
         h.postDelayed(new Runnable(){
             public void run(){

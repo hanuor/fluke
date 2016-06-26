@@ -93,7 +93,7 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
             try {
                 JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
                 String name = jsonObject.getString("fbName").replace(" ","%20");
-
+                String id = jsonObject.getString("id");
                 String track = jsonObject.getString("track").replaceAll(" ","%20");
                 String mail = jsonObject.getString("ebemail");
                 String artist = jsonObject.getString("artist").replace(" ","%20");
@@ -101,6 +101,7 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
                 String albumIm = jsonObject.getString("albumImage");
                 String time = jsonDocList.get(i).getCreatedAt();
                 String userPic = jsonObject.getString("fbUserpic");
+
                /* if (playing_now != null) {
                     if (playing_now.contentEquals(track)) {
                         if (name.contentEquals("Shantanu Johri")) {
