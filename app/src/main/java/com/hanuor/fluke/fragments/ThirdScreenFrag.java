@@ -50,6 +50,7 @@ public class ThirdScreenFrag extends AppCompatActivity {
                     String memail = object.getString("email");
                     String userid = object.optString("id");
                     String rem = "https://graph.facebook.com/" + userid+ "/picture?type=large";
+                    Log.v("Auth",""+rem);
                     Picasso.with(ThirdScreenFrag.this).load(rem).into(cimUser);
                     userName.setText(mFullname);
                     userEmail.setText(memail);

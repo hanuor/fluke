@@ -12,7 +12,12 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -25,7 +30,6 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.hanuor.fluke.R;
-import com.hanuor.fluke.init.PathView;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
@@ -47,7 +51,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Animation.AnimationListener {
     LoginButton fblogin;
     CallbackManager mcallbackManager;
     ProfileTracker mProfileT;
@@ -57,10 +61,11 @@ public class MainActivity extends AppCompatActivity {
     String fbEmail;
     UploadService upservice;
     UserService us;
+    TextView Mm;
     public static String fbImage;
-
+    RelativeLayout reLayout;
     public static String fbName;
-
+    Animation fadeIn, faD;
     SocialService msocialserice;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
@@ -69,15 +74,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         verifyStoragePermissions(this);
+        fadeIn = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.fade_in);
 
+        faD = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.fade_in);
+        fadeIn.setAnimationListener(this);
+        faD.setAnimationListener(this);
         us = App42API.buildUserService();
         msocialserice = App42API.buildSocialService();
         upservice = App42API.buildUploadService();
         mcallbackManager = CallbackManager.Factory.create();
 
-        setContentView(R.layout.activity_main);
-        PathView path_view = (PathView) findViewById(R.id.path);
-        path_view.init();
+        setContentView(R.layout.login_fluke);
+        reLayout = (RelativeLayout) findViewById(R.id.reLayout);
+        Mm = (TextView) findViewById(R.id.mm);
+        Mm.startAnimation(fadeIn);
         Profile mcheck = Profile.getCurrentProfile();
         if(mcheck!=null){
             AccessToken token = AccessToken.getCurrentAccessToken();
@@ -241,6 +253,25 @@ public class MainActivity extends AppCompatActivity {
     private void uploadProfilePicture(String userid,String url) {
         Picasso.with(MainActivity.this).load(url).into(target);
 
+
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        if(animation == fadeIn){
+
+            reLayout.startAnimation(faD);
+            reLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
 
     }
 

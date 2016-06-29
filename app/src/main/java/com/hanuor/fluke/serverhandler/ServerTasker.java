@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
@@ -101,14 +102,18 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
                 String albumIm = jsonObject.getString("albumImage");
                 String time = jsonDocList.get(i).getCreatedAt();
                 String userPic = jsonObject.getString("fbUserpic");
-
+                Log.d("demons",""+id);
                /* if (playing_now != null) {
                     if (playing_now.contentEquals(track)) {
                         if (name.contentEquals("Shantanu Johri")) {
                */           StringBuilder stringBuilder = new StringBuilder();
                             stringBuilder.append(name+" "+userPic+ " "+mail+" "+track+" "+artist+" "+artistIm+" "+ albumIm+" "+time);
                             // stringBuilder.append(name+FlukeApp42Database.separator+userPic+FlukeApp42Database.separator+mail+FlukeApp42Database.separator+track+FlukeApp42Database.separator+artist+FlukeApp42Database.separator+artistIm+FlukeApp42Database.separator+albumIm);
-                            idoo.add(stringBuilder.toString());
+                           if(id.equalsIgnoreCase("1281537931875901")) {
+                               idoo.add(stringBuilder.toString());
+                           }else{
+                               Toast.makeText(c ,"Not fpund", Toast.LENGTH_SHORT).show();
+                           }
                             Log.d("Pingin", "YEs" + playing_now + " " + idoo.size());
                            //  } else {
                             //pinging the server again

@@ -606,6 +606,7 @@ public class FragHandler extends AppCompatActivity {
                 public void onCompleted(JSONObject object, GraphResponse response) {
                     try {
                         String useridss = object.getString("id");
+                        Log.d("Auth",""+useridss);
                         String rem = "https://graph.facebook.com/" + useridss+ "/picture?type=large";
                         jsonServerGS.setId(object.getString("id"));
                         jsonServerGS.setFbName(object.getString("name"));
