@@ -1,13 +1,18 @@
 package com.hanuor.fluke.fragments;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -30,12 +35,17 @@ public class ThirdScreenFrag extends AppCompatActivity {
     TextView userName;
     TextView userEmail;
     FloatingActionButton fabSearch;
+    Button logout;
+    int i = 0;
+    int colors[] = {Color.parseColor("#E91E63"),Color.parseColor("#B71C1C"),Color.parseColor("#0D47A1"),Color.parseColor("#006064")};
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.third_frag);
         Log.d("CreateOn","VVVVV");
+        logout = (Button) findViewById(R.id.logOut);
         cimUser = (CircleImageView) findViewById(R.id.userImage);
         userName = (TextView) findViewById(R.id.userName);
         userEmail = (TextView) findViewById(R.id.userEmail);
@@ -74,6 +84,35 @@ public class ThirdScreenFrag extends AppCompatActivity {
                 startActivity(sar);
             }
         });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            animate();
+
+
+            }
+        });
+    }
+
+    private void animate() {
+        if(i<3) {
+            ValueAnimator colorAnimati = ValueAnimator.ofObject(new ArgbEvaluator(), colors[0], colors[i++]);
+            colorAnimati.setDuration(2500); // milliseconds
+            colorAnimati.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    logout.setBackgroundColor((int) valueAnimator.getAnimatedValue());
+
+                }
+            });
+            colorAnimati.start();
+
+            animate();
+        }else{
+            Toast.makeText(ThirdScreenFrag.this, "Logged out", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

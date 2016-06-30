@@ -175,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                                 jsonManager.setFbUserpic(rem);
                                 fbImage = rem;
                                 uploadProfilePicture(userid,rem);
+                                Intent startFluke = new Intent(MainActivity.this,FragHandler.class);
+                                startActivity(startFluke);
+                                finish();
                              }
                         });
                 Bundle parameters = new Bundle();

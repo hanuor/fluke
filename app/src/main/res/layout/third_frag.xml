@@ -80,17 +80,6 @@
                 android:layout_above="@+id/loveInd"
                 android:background="#eeeeee"
                 android:id="@+id/textView3" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fluke 2016. Hanuor"
-                android:fontFamily="sans-serif-condensed"
-
-                android:layout_centerHorizontal="true"
-                android:textColor="#e0e0e0"
-                android:layout_above="@+id/textView3"
-
-               />
 
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
@@ -100,6 +89,20 @@
                 android:layout_alignBottom="@+id/textView3"
                 android:layout_alignRight="@+id/textView2"
                 android:layout_alignEnd="@+id/textView2" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Log out"
+                android:textAllCaps="false"
+                android:textStyle="italic"
+                android:fontFamily="sans-serif-condensed"
+                android:id="@+id/logOut"
+
+                android:backgroundTint="#E91E63"
+                android:layout_marginTop="11dp"
+                android:layout_below="@+id/userEmail"
+                android:layout_centerHorizontal="true" />
 
         </RelativeLayout>
 
