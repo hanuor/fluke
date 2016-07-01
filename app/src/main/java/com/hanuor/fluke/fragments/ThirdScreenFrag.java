@@ -24,6 +24,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -36,7 +38,7 @@ public class ThirdScreenFrag extends AppCompatActivity {
     TextView userEmail;
     FloatingActionButton fabSearch;
     Button logout;
-    int i = 0;
+    int tempColor = 0;
     int colors[] = {Color.parseColor("#E91E63"),Color.parseColor("#B71C1C"),Color.parseColor("#0D47A1"),Color.parseColor("#006064")};
 
 
@@ -88,6 +90,7 @@ public class ThirdScreenFrag extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(ThirdScreenFrag.this, "Click", Toast.LENGTH_SHORT).show();
             animate();
 
 
@@ -96,22 +99,30 @@ public class ThirdScreenFrag extends AppCompatActivity {
     }
 
     private void animate() {
-        if(i<3) {
-            ValueAnimator colorAnimati = ValueAnimator.ofObject(new ArgbEvaluator(), colors[0], colors[i++]);
-            colorAnimati.setDuration(2500); // milliseconds
-            colorAnimati.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    logout.setBackgroundColor((int) valueAnimator.getAnimatedValue());
+        Log.d("HI","ss");
+                    Random r = new Random();
+                    int i1 = r.nextInt(3 - 0) + 0;
 
-                }
-            });
-            colorAnimati.start();
 
-            animate();
-        }else{
-            Toast.makeText(ThirdScreenFrag.this, "Logged out", Toast.LENGTH_SHORT).show();
-        }
+                    ValueAnimator colorAnimati = ValueAnimator.ofObject(new ArgbEvaluator(), colors[tempColor], colors[i1]);
+                    tempColor = i1;
+                    colorAnimati.setDuration(2500); // milliseconds
+                    colorAnimati.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            logout.setTextColor((int) valueAnimator.getAnimatedValue());
+
+
+                        }
+                    });
+                    colorAnimati.start();
+                    // delay 5 seconds
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                    }
+animate();
+
 
     }
 
