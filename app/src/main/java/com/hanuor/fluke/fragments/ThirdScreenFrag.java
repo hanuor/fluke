@@ -17,14 +17,13 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.hanuor.fluke.R;
 import com.hanuor.fluke.launcher.FragHandler;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -99,13 +98,8 @@ public class ThirdScreenFrag extends AppCompatActivity {
     }
 
     private void animate() {
-        Log.d("HI","ss");
-                    Random r = new Random();
-                    int i1 = r.nextInt(3 - 0) + 0;
 
-
-                    ValueAnimator colorAnimati = ValueAnimator.ofObject(new ArgbEvaluator(), colors[tempColor], colors[i1]);
-                    tempColor = i1;
+                    ValueAnimator colorAnimati = ValueAnimator.ofObject(new ArgbEvaluator(), colors[tempColor], Color.parseColor("#880E4F"));
                     colorAnimati.setDuration(2500); // milliseconds
                     colorAnimati.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
@@ -114,16 +108,13 @@ public class ThirdScreenFrag extends AppCompatActivity {
 
 
                         }
+
                     });
+
                     colorAnimati.start();
-                    // delay 5 seconds
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException e) {
-                    }
-animate();
 
-
+        LoginManager.getInstance().logOut();
+        finish();
     }
 
 }
