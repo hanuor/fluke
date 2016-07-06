@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -65,7 +66,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by Shantanu Johri on 07-05-2016.
  */
-public class FragHandler extends AppCompatActivity {
+public class FragHandler extends AppCompatActivity implements Animation.AnimationListener{
     FloatingActionButton fab2,fab3;
     int ico[] = {R.drawable.ic_search_unsel,R.drawable.ic_action_dsshare_logo,R.drawable.ic_action_menu_button_of_three_lines,R.drawable.sd,R.drawable.ic_search_sel,R.drawable.ic_action_dsshare_logo};
     private TextSwitcher mtextswitch;
@@ -91,6 +92,7 @@ public class FragHandler extends AppCompatActivity {
     JSONServerGS jsonServerGS = new JSONServerGS();
 
     Gson gson = new Gson();
+    Animation bounce;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,9 @@ public class FragHandler extends AppCompatActivity {
         setContentView(R.layout.main_screen);
 
         searchSong();
+        bounce = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.bounce);
+        bounce.setAnimationListener(this);
 
         otken = AccessToken.getCurrentAccessToken();
         getFBINFO(otken);
@@ -202,6 +207,8 @@ public class FragHandler extends AppCompatActivity {
         finLayout = (LinearLayout) findViewById(R.id.final_layout);
         fab = (FloatingActionButton) findViewById(R.id.fab3);
         fab.setImageResource(R.drawable.ic_action_slideshare_logo);
+        fab.startAnimation(bounce);
+
         fabProgressCircle = (FABProgressCircle) findViewById(R.id.ProgressCirclefab);
 
 
@@ -212,7 +219,6 @@ public class FragHandler extends AppCompatActivity {
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view,"Clicked",Snackbar.LENGTH_SHORT).show();
                 Intent srt = new Intent(FragHandler.this, ThirdScreenFrag.class);
                 startActivity(srt);
 
@@ -650,4 +656,18 @@ public class FragHandler extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
+    }
 }
