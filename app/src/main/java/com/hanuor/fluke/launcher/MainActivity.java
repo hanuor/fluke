@@ -35,6 +35,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.hanuor.fluke.R;
+import com.hanuor.fluke.database.IdDatabase;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     RelativeLayout reLayout;
     public static String fbName;
     Animation fadeIn, faD;
+    IdDatabase idD;
     SocialService msocialserice;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
@@ -108,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         mcallbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.login_fluke);
+
+        idD = new IdDatabase(this);
         reLayout = (RelativeLayout) findViewById(R.id.reLayout);
         Mm = (TextView) findViewById(R.id.mm);
         Mm.startAnimation(fadeIn);
@@ -115,6 +119,17 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         if(mcheck!=null){
             AccessToken token = AccessToken.getCurrentAccessToken();
             Log.d("UID",token.getUserId());
+
+            if(idD.getLength()==0){
+                idD.insert(token.getUserId());
+                Log.d("UIDQ",token.getUserId() + " "+idD.query());
+
+            }else{
+                Log.d("TAB",""+idD.query());
+                idD.clear();
+                idD.insert(token.getUserId());
+                Log.d("UIDI",idD.query());
+            }
             Intent mac = new Intent();
             mac.setClass(MainActivity.this, FragHandler.class);
             mac.putExtra("FacebookId",token.getUserId());
@@ -145,7 +160,17 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                                     AccessToken tokel = AccessToken.getCurrentAccessToken();
 
                                     if(tokel!=null){
+
                                         String userID = object.getString("id");
+                                        if(idD.getLength()==0){
+                                            idD.insert(object.getString("id"));
+                                            Log.d("UIDQ",object.getString("id") + " "+idD.query());
+
+                                        }else{
+                                            idD.clear();
+                                            idD.insert(object.getString("id"));
+
+                                        }
                                         msocialserice.linkUserFacebookAccount(userID, tokel.getToken(), new App42CallBack() {
                                             @Override
                                             public void onSuccess(Object o) {

@@ -19,6 +19,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.hanuor.fluke.R;
+import com.hanuor.fluke.database.IdDatabase;
 import com.hanuor.fluke.launcher.FragHandler;
 import com.squareup.picasso.Picasso;
 
@@ -38,6 +39,7 @@ public class ThirdScreenFrag extends AppCompatActivity {
     FloatingActionButton fabSearch;
     Button logout;
     int tempColor = 0;
+    IdDatabase idDatabase;
     int colors[] = {Color.parseColor("#E91E63"),Color.parseColor("#B71C1C"),Color.parseColor("#0D47A1"),Color.parseColor("#006064")};
 
 
@@ -46,12 +48,14 @@ public class ThirdScreenFrag extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.third_frag);
         Log.d("CreateOn","VVVVV");
+        idDatabase = new IdDatabase(this);
         logout = (Button) findViewById(R.id.logOut);
         cimUser = (CircleImageView) findViewById(R.id.userImage);
         userName = (TextView) findViewById(R.id.userName);
         userEmail = (TextView) findViewById(R.id.userEmail);
         fabSearch = (FloatingActionButton) findViewById(R.id.backtohome);
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        Log.d("UIDSSA",idDatabase.query());
         //Change this
         GraphRequest graphRequest = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
@@ -89,8 +93,12 @@ public class ThirdScreenFrag extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ThirdScreenFrag.this, "Click", Toast.LENGTH_SHORT).show();
-            animate();
+                //Toast.ma keText(ThirdScreenFrag.this, "Click", Toast.LENGTH_SHORT).show();
+                Log.d("UIDLL",""+idDatabase.query());
+            idDatabase.clear();
+                Log.d("UIDLD",""+idDatabase.query());
+
+                animate();
 
 
             }
