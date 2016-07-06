@@ -80,7 +80,7 @@ public class SecondScreenFrag extends AppCompatActivity{
             public View makeView() {
                 TextView textView = new TextView(SecondScreenFrag.this);
                 textView.setGravity(Gravity.CENTER);
-                textView.setTextColor(Color.parseColor("#4d490027"));
+                textView.setTextColor(Color.parseColor("#e8ebd8"));
                 return textView;
             }
         });

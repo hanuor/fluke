@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/backtohome"
-                android:src="@drawable/ic_search_unsel"
+                android:src="@drawable/ic_search_sel"
                 android:layout_alignBottom="@+id/textView3"
                 android:layout_alignRight="@+id/textView2"
                 android:layout_alignEnd="@+id/textView2" />
@@ -99,7 +99,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:id="@+id/logOut"
 
-                android:backgroundTint="#E91E63"
+                android:backgroundTint="#35252f"
                 android:layout_marginTop="11dp"
                 android:layout_below="@+id/userEmail"
                 android:layout_centerHorizontal="true" />

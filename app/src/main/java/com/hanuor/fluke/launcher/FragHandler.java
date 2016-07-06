@@ -67,7 +67,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class FragHandler extends AppCompatActivity {
     FloatingActionButton fab2,fab3;
-    int ico[] = {R.drawable.ic_search_unsel,R.drawable.ic_action_slideshare_logo,R.drawable.ic_action_menu_button_of_three_lines,R.drawable.sd,R.drawable.ic_search_sel,R.drawable.ic_action_dsshare_logo};
+    int ico[] = {R.drawable.ic_search_unsel,R.drawable.ic_action_dsshare_logo,R.drawable.ic_action_menu_button_of_three_lines,R.drawable.sd,R.drawable.ic_search_sel,R.drawable.ic_action_dsshare_logo};
     private TextSwitcher mtextswitch;
     ImageView coverImage;
     TextView artistName;
@@ -107,7 +107,7 @@ public class FragHandler extends AppCompatActivity {
             public View makeView() {
                 TextView textView = new TextView(FragHandler.this);
                 textView.setGravity(Gravity.CENTER);
-                textView.setTextColor(Color.parseColor("#4d490027"));
+                textView.setTextColor(Color.parseColor("#e8ebd8"));
                 return textView;
             }
         });
@@ -208,7 +208,7 @@ public class FragHandler extends AppCompatActivity {
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         fab3 = (FloatingActionButton) findViewById(R.id.fab3);
         fab2.setImageResource(ico[1]);
-        fab3.setImageResource(ico[2]);
+        fab3.setImageResource(ico[3]);
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
@@ -110,9 +109,11 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
                             stringBuilder.append(name+" "+userPic+ " "+mail+" "+track+" "+artist+" "+artistIm+" "+ albumIm+" "+time);
                             // stringBuilder.append(name+FlukeApp42Database.separator+userPic+FlukeApp42Database.separator+mail+FlukeApp42Database.separator+track+FlukeApp42Database.separator+artist+FlukeApp42Database.separator+artistIm+FlukeApp42Database.separator+albumIm);
                            if(id.equalsIgnoreCase("1281537931875901")) {
+                              // Toast.makeText(c ,"Not fpund", Toast.LENGTH_SHORT).show();
+
+                                }else{
                                idoo.add(stringBuilder.toString());
-                           }else{
-                               Toast.makeText(c ,"Not fpund", Toast.LENGTH_SHORT).show();
+
                            }
                             Log.d("Pingin", "YEs" + playing_now + " " + idoo.size());
                            //  } else {
