@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
+import com.hanuor.fluke.database.IdDatabase;
 import com.hanuor.fluke.interfaces.ServerInterface;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
 
@@ -25,6 +26,7 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
     Context c;
     String playing_now = null;
     public ServerInterface serverInterface = null;
+    IdDatabase idDatabase;
 
     public ServerTasker(Context c,ServerInterface serverInterface) {
         this.c = c;
@@ -33,6 +35,7 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
 
     @Override
     protected void onPreExecute() {
+        idDatabase = new IdDatabase(c);
         MusicHits mah = new MusicHits();
         IntentFilter ifco = mah.searchsong();
         c.registerReceiver(mReceiver, ifco);
@@ -108,7 +111,7 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
                */           StringBuilder stringBuilder = new StringBuilder();
                             stringBuilder.append(name+" "+userPic+ " "+mail+" "+track+" "+artist+" "+artistIm+" "+ albumIm+" "+time);
                             // stringBuilder.append(name+FlukeApp42Database.separator+userPic+FlukeApp42Database.separator+mail+FlukeApp42Database.separator+track+FlukeApp42Database.separator+artist+FlukeApp42Database.separator+artistIm+FlukeApp42Database.separator+albumIm);
-                           if(id.equalsIgnoreCase("1281537931875901")) {
+                           if(id.equalsIgnoreCase(idDatabase.query())) {
                               // Toast.makeText(c ,"Not fpund", Toast.LENGTH_SHORT).show();
 
                                 }else{
