@@ -1,22 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#ECEFF1"/>
+        android:layout_height="match_parent"
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/sliding_tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#455A64"
-        />
+        android:background="@drawable/back_grad"
+        android:id="@+id/initial_layout">
 
 
+        <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.Wave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            app:SpinKit_Color="#cce8ebd8" />
+        <TextSwitcher
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textswitcher"
+            android:layout_margin="7dp"
+            android:layout_below="@+id/spin_kit">
+        </TextSwitcher>
+    </RelativeLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:id="@+id/final_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="50">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:id="@+id/coverImage"
+                        android:scaleType="centerCrop"
+                        android:layout_height="match_parent" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+
+                        android:layout_height="match_parent">
+
+
+                        <View
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:background="@drawable/dark_gradient"
+                            android:layout_gravity="center"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true" />
+                    </RelativeLayout>
+                </FrameLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="#eeeeee"
+                    android:foregroundGravity="center"
+                    android:id="@+id/artistImage"
+                    app:civ_border_width="0.5dp"
+                    app:civ_border_color="#ffffff"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="7dp"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#B0BEC5"
+            android:id="@+id/bottom_desc"
+            android:layout_weight="50">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:id="@+id/artistName"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textStyle="italic|bold"
+                    android:layout_marginTop="7dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/artistName"
+                    android:layout_centerHorizontal="true"
+                    android:text=""
+                    android:fontFamily="sans-serif-condensed"
+                    android:id="@+id/songName"/>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.3dp"
+                    android:layout_below="@+id/songName"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="11dp"
+                    android:id="@+id/lineseparator"
+                    android:layout_marginLeft="120dp"
+                    android:layout_marginRight="120dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lineseparator"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="11dp"
+                    android:text="Genre : "
+                    android:fontFamily="sans-serif-condensed"
+                    android:id="@+id/coo"/>
+                <TextView
+                    android:layout_below="@+id/lineseparator"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_toRightOf="@+id/coo"
+                    android:textStyle="italic"
+                    android:id="@+id/cooname"
+                    android:layout_marginLeft="3dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_below="@+id/coo"
+
+                    android:fontFamily="sans-serif-condensed"
+                    android:textStyle="bold"
+                    android:id="@+id/genre"
+                    android:text="Country of Origin : "
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/genrename"
+                    android:layout_below="@+id/cooname"
+
+                    android:fontFamily="sans-serif-condensed"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="3dp"
+                    android:textStyle="italic"
+                    android:layout_toRightOf="@+id/genre"/>
+
+                <com.github.jorgecastilloprz.FABProgressCircle
+                    android:id="@+id/ProgressCirclefab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:arcColor="#ffffff"
+                    app:reusable="true"
+                    app:finalIcon="@drawable/ic_action_approve_sign"
+                    app:arcWidth="3dp"
+                    app:roundedStroke="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    >
+                    <android.support.design.widget.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fab2"
+
+                        android:layout_margin="10dp"
+                        android:layout_toRightOf="@+id/genrename"
+                        android:layout_toEndOf="@+id/genrename" />
+                </com.github.jorgecastilloprz.FABProgressCircle>
+
+
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fab3"
+        android:layout_margin="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

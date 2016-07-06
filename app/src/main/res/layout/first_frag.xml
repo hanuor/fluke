@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_grad"
+    android:id="@+id/initial_layout">
+
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.CubeGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        app:SpinKit_Color="#e8ebd8" />
+    <TextSwitcher
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textswitcher"
+        android:layout_margin="7dp"
+        android:layout_below="@+id/spin_kit">
+    </TextSwitcher>
+</RelativeLayout>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:visibility="invisible"
+    android:id="@+id/final_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:weightSum="100">
@@ -35,6 +69,7 @@
                     android:background="@drawable/dark_gradient"
                     android:layout_gravity="center"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
                 </RelativeLayout>
             </FrameLayout>
@@ -42,6 +77,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="#eeeeee"
+                android:foregroundGravity="center"
                 android:id="@+id/artistImage"
                 app:civ_border_width="0.5dp"
                 app:civ_border_color="#ffffff"
@@ -130,6 +166,15 @@
     android:textStyle="italic"
     android:layout_toRightOf="@+id/genre"/>
 
-        </RelativeLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_margin="7dp"
+                android:id="@+id/fab"
+                />
+
+</RelativeLayout>
     </LinearLayout>
     </LinearLayout>
+</RelativeLayout>

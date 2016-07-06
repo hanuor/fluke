@@ -6,10 +6,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name="com.hanuor.fluke.init.FlukeInit"
         android:allowBackup="true"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:replace="android:icon"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -20,14 +23,19 @@
 
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".launcher.TestAct">
+        <activity android:name=".launcher.FragHandler"
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleInstance"/>
+        <activity android:name=".fragments.SecondScreenFrag"/>
+        <activity android:name=".fragments.ThirdScreenFrag"/>
+        <activity android:name=".launcher.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".launcher.MainActivity"/>
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"

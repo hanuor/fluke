@@ -2,22 +2,29 @@ package com.hanuor.fluke.launcher;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -28,9 +35,13 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.hanuor.fluke.R;
+import com.hanuor.fluke.database.IdDatabase;
+import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
-import com.shephertz.app42.paas.sdk.android.upload.Upload;
+import com.shephertz.app42.paas.sdk.android.App42Response;
+import com.shephertz.app42.paas.sdk.android.social.Social;
+import com.shephertz.app42.paas.sdk.android.social.SocialService;
 import com.shephertz.app42.paas.sdk.android.upload.UploadFileType;
 import com.shephertz.app42.paas.sdk.android.upload.UploadService;
 import com.shephertz.app42.paas.sdk.android.user.UserService;
@@ -41,31 +52,28 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Animation.AnimationListener {
     LoginButton fblogin;
-    TextView tv;
     CallbackManager mcallbackManager;
     ProfileTracker mProfileT;
-    ImageView iv;
-    Button remove;
-    FileInputStream fin;
-    InputStream is;
-    ImageView ivd;
+    JSONManager jsonManager = new JSONManager();
     String userid;
     String fPath;
-    String aura;
+    String fbEmail;
     UploadService upservice;
     UserService us;
-    Button b2;
+    TextView Mm;
+    public static String fbImage;
+    RelativeLayout reLayout;
+    public static String fbName;
+    Animation fadeIn, faD;
+    IdDatabase idD;
+    SocialService msocialserice;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     //User user;
@@ -74,49 +82,121 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         verifyStoragePermissions(this);
 
+        if(!isNetworkAvailable()){
+            new AlertDialog.Builder(this)
+                    .setTitle("No Internet!")
+                    .setMessage("Please check your internet connection")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            finish();
+                        }
+                    })
+
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setCancelable(false)
+                    .show();
+        }
+        fadeIn = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.fade_in);
+
+        faD = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.fade_in);
+        fadeIn.setAnimationListener(this);
+        faD.setAnimationListener(this);
         us = App42API.buildUserService();
+        msocialserice = App42API.buildSocialService();
         upservice = App42API.buildUploadService();
         mcallbackManager = CallbackManager.Factory.create();
 
-        setContentView(R.layout.activity_main);
-        fblogin = (LoginButton) findViewById(R.id.login_button);
-        remove = (Button) findViewById(R.id.remove);
-        tv = (TextView) findViewById(R.id.tv);
-        iv = (ImageView) findViewById(R.id.iv);
-        ivd = (ImageView) findViewById(R.id.ivd);
-        b2 = (Button) findViewById(R.id.b2);
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent ac = new Intent();
-                ac.setClass(MainActivity.this,TestAct.class);
-                startActivity(ac);
+        setContentView(R.layout.login_fluke);
 
+        idD = new IdDatabase(this);
+        reLayout = (RelativeLayout) findViewById(R.id.reLayout);
+        Mm = (TextView) findViewById(R.id.mm);
+        Mm.startAnimation(fadeIn);
+        Profile mcheck = Profile.getCurrentProfile();
+        if(mcheck!=null){
+            AccessToken token = AccessToken.getCurrentAccessToken();
+            Log.d("UID",token.getUserId());
+
+            if(idD.getLength()==0){
+                idD.insert(token.getUserId());
+                Log.d("UIDQ",token.getUserId() + " "+idD.query());
+
+            }else{
+                Log.d("TAB",""+idD.query());
+                idD.clear();
+                idD.insert(token.getUserId());
+                Log.d("UIDI",idD.query());
             }
-        });
-         fblogin.setReadPermissions(Arrays.asList(
+            Intent mac = new Intent();
+            mac.setClass(MainActivity.this, FragHandler.class);
+            mac.putExtra("FacebookId",token.getUserId());
+            mac.putExtra("fbimage",fbImage);
+            mac.putExtra("fbname",fbName);
+            mac.putExtra("fbEmail",fbEmail);
+
+            startActivity(mac);
+
+        }
+        fblogin = (LoginButton) findViewById(R.id.login_button);
+        fblogin.setReadPermissions(Arrays.asList(
                  "public_profile", "email", "user_birthday", "user_friends"));
-        remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                         }
-        });
+
+
         fblogin.registerCallback(mcallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
                 Log.d("facebookresult",""+loginResult);
+
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(final JSONObject object, GraphResponse response) {
 
                                 try {
-                                    tv.setText("Hi, " + object.getString("name")+" , "+object.optString("id"));
+                                    AccessToken tokel = AccessToken.getCurrentAccessToken();
+
+                                    if(tokel!=null){
+
+                                        String userID = object.getString("id");
+                                        if(idD.getLength()==0){
+                                            idD.insert(object.getString("id"));
+                                            Log.d("UIDQ",object.getString("id") + " "+idD.query());
+
+                                        }else{
+                                            idD.clear();
+                                            idD.insert(object.getString("id"));
+
+                                        }
+                                        msocialserice.linkUserFacebookAccount(userID, tokel.getToken(), new App42CallBack() {
+                                            @Override
+                                            public void onSuccess(Object o) {
+                                                Social social = (Social) o;
+                                                Log.d("APP42and",""+social.getUserName());
+
+
+                                                Log.d("APP42",""+social.getFacebookProfile().picture);
+                                             }
+
+                                            @Override
+                                            public void onException(Exception e) {
+
+                                            }
+                                        });
+                                    }
+                                   // tv.setText("Hi, " + object.getString("name")+" , "+object.optString("id"));
                                     String mFullname = object.getString("name");
+                                    fbName = mFullname;
+                                    jsonManager.setFbName(mFullname);
                                     String userID = object.getString("id");
                                     String email = object.getString("email");
+                                    fbEmail = email;
+                                    jsonManager.setEbemail(email);
                                     String birthday = object.getString("birthday");
+
                                     if(email!=null) {
                                         us.createUser(userID, mFullname, email, new App42CallBack() {
                                             @Override
@@ -138,46 +218,13 @@ public class MainActivity extends AppCompatActivity {
                                 final String uid = object.optString("id");
                                 userid = object.optString("id");
                                 String rem = "https://graph.facebook.com/" + uid+ "/picture?type=large";
-                                Picasso.with(MainActivity.this)
-                                        .load("https://graph.facebook.com/" + uid+ "/picture?type=large")
-                                        .into(iv);
-
+                                jsonManager.setFbUserpic(rem);
+                                fbImage = rem;
                                 uploadProfilePicture(userid,rem);
-                                Thread thread = new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        try {
-                                            userid = object.optString("id");
-                                            Log.v("Id",""+userid);
-
-                                            InputStream ism =  new URL("https://graph.facebook.com/" + userid + "/picture?type=large").openStream();
-                                           // is = new URL("https://graph.facebook.com/" + uid + "/picture?type=large").openStream();
-                                            upservice.uploadFileForUser("abc1.jpg","ABC", "https://graph.facebook.com/" + userid + "/picture?type=large", UploadFileType.IMAGE, "balsh", new App42CallBack() {
-                                                @Override
-                                                public void onSuccess(Object o) {
-                                                    Log.v("Response",""+o.toString());
-                                                  //  Toast.makeText(MainActivity.this, "Boom!", Toast.LENGTH_SHORT).show();
-                                                }
-
-                                                @Override
-                                                public void onException(Exception e) {
-
-                                                    Log.v("Response",""+e);
-                                                   // Toast.makeText(MainActivity.this, ""+e, Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                });
-                                thread.start();
-
-
-                            }
+                                Intent startFluke = new Intent(MainActivity.this,FragHandler.class);
+                                startActivity(startFluke);
+                                finish();
+                             }
                         });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,name,email,gender, birthday");
@@ -203,11 +250,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
 
-                tv.setText(""+currentProfile.getName());
+               // tv.setText(""+currentProfile.getName());
             }
         };
         mProfileT.startTracking();
 
+
+/*
 
 
                 upservice.getFileByUser("xyz.jpg", "XYZ", new App42CallBack() {
@@ -224,10 +273,15 @@ public class MainActivity extends AppCompatActivity {
 
                             //imageup(urlo);
                             Log.d("LOLL", "" + fileList.get(i).getUrl());
+                            new com.hanuor.fluke.launcher.DownloadImageTask(ivd).execute(fileList.get(i).getUrl());
+*/
+/*
+                            new com.hanuor.fluke.imageutils.D
                             new DownloadImageTask((ImageView) findViewById(R.id.ivd))
                                     .execute(fileList.get(i).getUrl());
 
-                            //tv.setText(""+urlo);
+                            *//*
+//tv.setText(""+urlo);
                         }
 
                     }
@@ -239,17 +293,35 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+*/
 
-        Log.d("AURA",""+aura);
-        Picasso.with(MainActivity.this)
-                .load(aura)
-                .into(ivd);
+
 
     }
+
 
     private void uploadProfilePicture(String userid,String url) {
         Picasso.with(MainActivity.this).load(url).into(target);
 
+
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        if(animation == fadeIn){
+
+            reLayout.startAnimation(faD);
+            reLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
 
     }
 
@@ -304,7 +376,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             Log.v("check",""+s+""+userid);
-            upservice.uploadFileForUser(userid+".jpg", userid, s, UploadFileType.IMAGE, "User " + userid + " Image", new App42CallBack() {
+            //Every time a user logs in ..replace the pic with a new one
+            upservice.removeFileByName(userid+".jpg", new App42CallBack() {
+                public void onSuccess(Object response)
+                {
+                    App42Response app42response = (App42Response)response;
+                    System.out.println("response is " + app42response) ;
+                }
+                public void onException(Exception ex)
+                {
+                    System.out.println("Exception Message"+ex.getMessage());
+                }
+            });
+
+
+            upservice.uploadFile(userid + ".jpg", s, UploadFileType.IMAGE, "Image for this user" + userid, new App42CallBack() {
                 @Override
                 public void onSuccess(Object o) {
                     Log.d("Up","loaded");
@@ -331,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
                     Environment.getExternalStorageDirectory().getPath()
                             + "/fluke");
             fm.mkdirs();
-            File file = new File(fm, "INGS.jpg");
+            File file = new File(fm, userid+".jpg");
             Log.d("Runtastic", "GOa" +
                     file.getPath());
             fPath = file.getAbsolutePath();
@@ -353,31 +439,6 @@ public class MainActivity extends AppCompatActivity {
             return fPath;
         }
     }
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
-
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -404,4 +465,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

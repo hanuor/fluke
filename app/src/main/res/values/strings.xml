@@ -5,4 +5,7 @@
     <string name="app42apikey">31fe046a4bba23fbeb15c63ab0dc976ba035b7bda880a79246fc002a2efd5843</string>
     <string name="facebook_app_id">1571011956525222</string>
     <string name="music_graph_api_key">527a48eb2415c79cfd66ab7bc66a3904</string>
-</resources>
+    <string name="love">Powered by Last.fm and Musicgraph</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+   </resources>

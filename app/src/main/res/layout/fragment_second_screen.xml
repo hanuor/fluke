@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:fitsSystemWindows="true"
+    android:background="@drawable/back_grad"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+
+    android:background="#00ffffff"
+    android:minHeight="?attr/actionBarSize"
+    android:titleTextColor="#ffffff">
+
+</android.support.v7.widget.Toolbar>
+
+<RelativeLayout
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/loading"
+            android:visibility="visible"
+            android:layout_height="wrap_content">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.Wave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            app:SpinKit_Color="#cce8ebd8" />
+        <TextSwitcher
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textswitcher"
+            android:layout_margin="7dp"
+            android:layout_below="@+id/spin_kit">
+        </TextSwitcher>
+        </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+        android:id="@+id/cardList"
+            android:visibility="gone"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    </RelativeLayout>
+</RelativeLayout>

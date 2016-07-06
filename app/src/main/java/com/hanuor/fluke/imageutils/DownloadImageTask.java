@@ -1,4 +1,4 @@
-package com.hanuor.fluke.launcher;
+package com.hanuor.fluke.imageutils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +13,7 @@ import java.io.InputStream;
  */
 class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
+    //DownloadImageTask(ivd).execute(fileList.get(i).getUrl());
 
     public DownloadImageTask(ImageView bmImage) {
         this.bmImage = bmImage;
