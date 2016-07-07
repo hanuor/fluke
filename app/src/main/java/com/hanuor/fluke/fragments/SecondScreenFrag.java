@@ -48,13 +48,14 @@ public class SecondScreenFrag extends AppCompatActivity{
     RelativeLayout loading;
     RecyclerView cardList;
     Toolbar toolbar;
-
+    TextView notfound;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_second_screen);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         toolbar.setTitle("Listening to this");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -64,8 +65,12 @@ public class SecondScreenFrag extends AppCompatActivity{
         registerReceiver(mReceiver, ifla);
 
         //
-
+        notfound = (TextView) findViewById(R.id.notfound);
+        notfound.setTextColor(Color.parseColor("#cce8ebd8"));
+        notfound.setText("Seems like no one is listening to this song right now. Try another one or check after some time.");
+        notfound.setTextSize(17);
         final RecyclerView recList = (RecyclerView) findViewById(R.id.cardList);
+
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(SecondScreenFrag.this);
         mtextswitch = (TextSwitcher) findViewById(R.id.textswitcher);
@@ -121,89 +126,96 @@ public class SecondScreenFrag extends AppCompatActivity{
                 // Toast.makeText(getActivity(), "Yipeee", Toast.LENGTH_SHORT).show();
                 Log.d("STRRR",""+fetchAll.size());
                 //Do your task here
+                if(fetchAll.size()==0){
+                    notfound.setVisibility(View.VISIBLE);
+                    recList.setVisibility(View.GONE);
+                    loading.setVisibility(View.GONE);
+                }else
+                {
+                    for(int i=0;i<fetchAll.size();i++) {
+                        Lister = fetchAll.get(i).split(" ");
 
-                for(int i=0;i<fetchAll.size();i++) {
-                    Lister = fetchAll.get(i).split(" ");
+                        //  fetchDetails = Arrays.asList(fetchAll.get(i).split(FlukeApp42Database.separator));
+                        // Lister = fetchAll.get(i).split(FlukeApp42Database.separator);
+                        Log.d("STRINGER",Lister[1]);
+                        //String mos[] = Lister[0].split(FlukeApp42Database.separator);
+                        // Log.d("SSSS",""+mos.length);
+                        String fbName = Lister[0];
+                        String rename = fbName.replace("%20"," ");
+                        fetchDetails.add(rename);
+                        String fbPic = Lister[1];
+                        good.add(fbPic);
 
-                    //  fetchDetails = Arrays.asList(fetchAll.get(i).split(FlukeApp42Database.separator));
-                    // Lister = fetchAll.get(i).split(FlukeApp42Database.separator);
-                    Log.d("STRINGER",Lister[1]);
-                    //String mos[] = Lister[0].split(FlukeApp42Database.separator);
-                    // Log.d("SSSS",""+mos.length);
-                    String fbName = Lister[0];
-                    String rename = fbName.replace("%20"," ");
-                    fetchDetails.add(rename);
-                    String fbPic = Lister[1];
-                    good.add(fbPic);
-
-                    String email = Lister[2];
-                    String track = Lister[3];
-                    String artist = Lister[4];
-                    String artistIm = Lister[5];
-                    artistIma.add(artistIm);
-                    String albumIm = Lister[6];
-                    String timers = Lister[7];
-                    Log.d("TIME",""+timers);
-                    String listme = timers.replace("."," ");
-                    String ala[] = listme.split(" ");
-                    String mas = ala[0].replace("T"," ");
-
-
-                    try
-                    {
-                        String ourDate = mas
-                                ;
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        Date value = formatter.parse(ourDate);
-
-                        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy HH:mm"); //this format changeable
-                        dateFormatter.setTimeZone(TimeZone.getDefault());
-                        ourDate = dateFormatter.format(value);
-                        String vall[] = ourDate.split(" ");
-                        String omk = vall[1];
-                        Log.d("OMK",omk);
+                        String email = Lister[2];
+                        String track = Lister[3];
+                        String artist = Lister[4];
+                        String artistIm = Lister[5];
+                        artistIma.add(artistIm);
+                        String albumIm = Lister[6];
+                        String timers = Lister[7];
+                        Log.d("TIME",""+timers);
+                        String listme = timers.replace("."," ");
+                        String ala[] = listme.split(" ");
+                        String mas = ala[0].replace("T"," ");
 
 
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(Calendar.HOUR_OF_DAY, 0);
-                        calendar.set(Calendar.MINUTE, 0);
-                        String kow = new SimpleDateFormat("HH:mm").format(new Date()).toString();
+                        try
+                        {
+                            String ourDate = mas
+                                    ;
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+                            Date value = formatter.parse(ourDate);
 
-                        // String omk1 = new SimpleDateFormat("HH:mm").format(calendar.getTime()).toString();
-                        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-                        Date date1 = format.parse(kow);
-                        Log.d("Origi",""+kow);
-                        Date date2 = format.parse(omk);
-                        long difference = date2.getTime() - date1.getTime();
-                        Log.d("OurDate", ""+difference);
-                        if(difference<0){
-                            difference = 0-difference;
+                            SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy HH:mm"); //this format changeable
+                            dateFormatter.setTimeZone(TimeZone.getDefault());
+                            ourDate = dateFormatter.format(value);
+                            String vall[] = ourDate.split(" ");
+                            String omk = vall[1];
+                            Log.d("OMK",omk);
+
+
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(Calendar.HOUR_OF_DAY, 0);
+                            calendar.set(Calendar.MINUTE, 0);
+                            String kow = new SimpleDateFormat("HH:mm").format(new Date()).toString();
+
+                            // String omk1 = new SimpleDateFormat("HH:mm").format(calendar.getTime()).toString();
+                            SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                            Date date1 = format.parse(kow);
+                            Log.d("Origi",""+kow);
+                            Date date2 = format.parse(omk);
+                            long difference = date2.getTime() - date1.getTime();
+                            Log.d("OurDate", ""+difference);
+                            if(difference<0){
+                                difference = 0-difference;
+                            }
+                            if(difference >= 0 && difference < 10000){
+                                fbtimey.add("Listening to this now");
+                            }else if(difference >10000 && difference < 100000){
+                                fbtimey.add("Just a few seconds ago");
+                            }else if(difference > 100000 && difference <10000000){
+                                fbtimey.add("Minutes ago");
+                            }else if (difference >10000000){
+                                fbtimey.add("Long time ago");
+                            }else{
+                                Log.d("NNN",""+difference);
+                                fbtimey.add("NNN");
+                            }
                         }
-                        if(difference >= 0 && difference < 10000){
-                            fbtimey.add("Listening to this now");
-                        }else if(difference >10000 && difference < 100000){
-                            fbtimey.add("Just a few seconds ago");
-                        }else if(difference > 100000 && difference <10000000){
-                            fbtimey.add("Minutes ago");
-                        }else if (difference >10000000){
-                            fbtimey.add("Long time ago");
-                        }else{
-                            Log.d("NNN",""+difference);
-                            fbtimey.add("NNN");
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
                         }
                     }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    Log.d("MMMMMMM",""+fbtimey.size());
+
+                    ResultAdapter rS = new ResultAdapter(SecondScreenFrag.this,good,fetchDetails,artistIma,fbtimey);
+                    recList.setAdapter(rS);
+                    recList.setVisibility(View.VISIBLE);
+                    loading.setVisibility(View.GONE);
                 }
-                Log.d("MMMMMMM",""+fbtimey.size());
 
-                ResultAdapter rS = new ResultAdapter(SecondScreenFrag.this,good,fetchDetails,artistIma,fbtimey);
-                recList.setAdapter(rS);
-                recList.setVisibility(View.VISIBLE);
-                loading.setVisibility(View.GONE);
 
                 // 2016-05-19T16:39:54.322Z
 

@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
@@ -44,6 +43,7 @@ import com.hanuor.fluke.R;
 import com.hanuor.fluke.apihits.ApiName;
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
+import com.hanuor.fluke.database.IdDatabase;
 import com.hanuor.fluke.fragments.SecondScreenFrag;
 import com.hanuor.fluke.fragments.ThirdScreenFrag;
 import com.hanuor.fluke.gettersetters.JSONServerGS;
@@ -82,7 +82,10 @@ public class FragHandler extends AppCompatActivity implements Animation.Animatio
     FABProgressCircle fabProgressCircle;
     int oldback = 0, oldtext = 0;
     public String playingnow_song = null, playingnow_artist = null;
-    String texts[] = {"Fluke searches and displays the current playing song automatically","Try changing the track if searching is taking a long time","Matching over music. Please wait while we load the currently playing song"};
+    String texts[] = {"Fluke searches and displays the current playing song automatically",
+            "Fluke captures the song which is being currently played through Google Play Music®",
+            "Matching over music. Please wait while we load the currently playing song",
+            "Pause and then play the song again if searching is taking too long"};
     LinearLayout bottom_desc;
     public String song_track  = null;
     CircleImageView artistImage;
@@ -90,7 +93,7 @@ public class FragHandler extends AppCompatActivity implements Animation.Animatio
     LinearLayout finLayout;
     JSONManager jsonManager = new JSONManager();
     JSONServerGS jsonServerGS = new JSONServerGS();
-
+    IdDatabase idDatabase;
     Gson gson = new Gson();
     Animation bounce;
 
@@ -125,7 +128,7 @@ public class FragHandler extends AppCompatActivity implements Animation.Animatio
         fadeOut.setDuration(3000);
         mtextswitch.setInAnimation(fadeIn);
         mtextswitch.setOutAnimation(fadeOut);
-
+        idDatabase = new IdDatabase(this);
         final Handler h = new Handler();
         final int delay = 4000; //milliseconds
 
@@ -133,7 +136,7 @@ public class FragHandler extends AppCompatActivity implements Animation.Animatio
             public void run(){
                 //do something
                 Random r = new Random();
-                int i1 = r.nextInt(3 - 0) + 0;
+                int i1 = r.nextInt(4 - 0) + 0;
                 mtextswitch.setText(texts[i1]);
                 h.postDelayed(this, delay);
             }
@@ -246,7 +249,18 @@ public class FragHandler extends AppCompatActivity implements Animation.Animatio
                         });
                     }
                 }, 2000);
-                Log.d("IAMHERE","ss");
+                Log.d("IAMHERE","ss "+ jsonServerGS.getTrack());
+                //idDatabase.clear_song();
+                //idDatabase.insert_song(jsonServerGS.getTrack());
+/*
+
+                if(idDatabase.get_song_length()<=0){
+
+                    idDatabase.insert_song(jsonServerGS.getTrack());
+
+                }else{
+                    }
+*/
                 jsonManager.setArtistImage(jsonServerGS.getArtistimage());
                 jsonManager.setArtist(jsonServerGS.getArtist());
                 jsonManager.setAlbumImage(jsonServerGS.getAlbumimage());
@@ -437,6 +451,7 @@ public class FragHandler extends AppCompatActivity implements Animation.Animatio
                                 resu = response.getJSONObject("results");
                                 Log.d("MEMYSELFANDI",""+resu.length());
                                 JSONObject arr = resu.getJSONObject("artistmatches");
+                                Log.d("MYMYss",""+arr.toString());
                                 JSONArray otb = arr.getJSONArray("artist");
                                 for(int i = 0;i<otb.length();i++){
                                     JSONObject mom = otb.getJSONObject(i);
@@ -448,11 +463,15 @@ public class FragHandler extends AppCompatActivity implements Animation.Animatio
                                     JSONObject amd = and.getJSONObject(3);
 
                                     String ass = amd.getString("#text");
-                                    Log.d("MYMYMYMY",""+ass);
+                                    Log.d("MYMYMYMYx",""+ass);
                                     if(ass!=null){
                                         jsonServerGS.setArtistimage(ass);
-                                        Picasso.with(FragHandler.this).load(ass).into(artistImage);
-                                        Picasso.with(FragHandler.this).load(ass).into(targetq);
+                                        try {
+                                            Picasso.with(FragHandler.this).load(ass).into(artistImage);
+                                            Picasso.with(FragHandler.this).load(ass).into(targetq);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                         break;
                                     }
 
