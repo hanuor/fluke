@@ -273,6 +273,7 @@ public class SecondScreenFrag extends AppCompatActivity{
             Intent sar = new Intent(SecondScreenFrag.this, FragHandler.class);
             sar.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(sar);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

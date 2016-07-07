@@ -30,7 +30,6 @@
             app:civ_border_width="0.5dp"
             android:layout_margin="5dp"
             android:id="@+id/userImage"
-            android:layout_below="@+id/yp"
             app:civ_border_color="#212121"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />

@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -55,7 +54,7 @@ public class ThirdScreenFrag extends AppCompatActivity {
         userEmail = (TextView) findViewById(R.id.userEmail);
         fabSearch = (FloatingActionButton) findViewById(R.id.backtohome);
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        Log.d("UIDSSA",idDatabase.query());
+       // Log.d("UIDSSA",idDatabase.query());
         //Change this
         GraphRequest graphRequest = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
