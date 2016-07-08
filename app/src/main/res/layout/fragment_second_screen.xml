@@ -33,7 +33,7 @@
         <com.github.ybq.android.spinkit.SpinKitView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.Wave"
+            style="@style/SpinKitView.Large.WanderingCubes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -47,15 +47,38 @@
             android:layout_margin="7dp"
             android:layout_below="@+id/spin_kit">
         </TextSwitcher>
+
         </RelativeLayout>
-        <TextView
+
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_margin="7dp"
             android:visibility="gone"
+            android:layout_below="@+id/bot"
             android:fontFamily="sans-serif-condensed"
             android:id="@+id/notfound"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/w"
+        android:id="@+id/fot"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/fot"
+        android:id="@+id/bot"
+        android:fontFamily="sans-serif-condensed"
+        />
         <android.support.v7.widget.RecyclerView
         android:id="@+id/cardList"
             android:visibility="gone"

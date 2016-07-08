@@ -4,14 +4,18 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
@@ -102,45 +106,63 @@ public class FragHandler extends AppCompatActivity implements Animation.Animatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_screen);
 
-        searchSong();
-        bounce = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.bounce);
-        bounce.setAnimationListener(this);
+        if(!isNetworkAvailable()){
+            new AlertDialog.Builder(this)
+                    .setTitle("No Internet!")
+                    .setMessage("Please check your internet connection")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            finish();
+                        }
+                    })
 
-        otken = AccessToken.getCurrentAccessToken();
-        getFBINFO(otken);
-        setupTabLayout();
-        mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                TextView textView = new TextView(FragHandler.this);
-                textView.setGravity(Gravity.CENTER);
-                textView.setTextColor(Color.parseColor("#e8ebd8"));
-                return textView;
-            }
-        });
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(2000);
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setCancelable(false)
+                    .show();
+        }
+else {
 
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(3000);
-        mtextswitch.setInAnimation(fadeIn);
-        mtextswitch.setOutAnimation(fadeOut);
-        idDatabase = new IdDatabase(this);
-        final Handler h = new Handler();
-        final int delay = 4000; //milliseconds
+            searchSong();
+            bounce = AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.bounce);
+            bounce.setAnimationListener(this);
 
-        h.postDelayed(new Runnable(){
-            public void run(){
-                //do something
-                Random r = new Random();
-                int i1 = r.nextInt(4 - 0) + 0;
-                mtextswitch.setText(texts[i1]);
-                h.postDelayed(this, delay);
-            }
-        }, delay);
+            otken = AccessToken.getCurrentAccessToken();
+            getFBINFO(otken);
+            setupTabLayout();
+            mtextswitch.setFactory(new ViewSwitcher.ViewFactory() {
+                @Override
+                public View makeView() {
+                    TextView textView = new TextView(FragHandler.this);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextColor(Color.parseColor("#e8ebd8"));
+                    return textView;
+                }
+            });
+            Animation fadeIn = new AlphaAnimation(0, 1);
+            fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+            fadeIn.setDuration(2000);
+
+            Animation fadeOut = new AlphaAnimation(1, 0);
+            fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+            fadeOut.setDuration(3000);
+            mtextswitch.setInAnimation(fadeIn);
+            mtextswitch.setOutAnimation(fadeOut);
+            idDatabase = new IdDatabase(this);
+            final Handler h = new Handler();
+            final int delay = 4000; //milliseconds
+
+            h.postDelayed(new Runnable() {
+                public void run() {
+                    //do something
+                    Random r = new Random();
+                    int i1 = r.nextInt(4 - 0) + 0;
+                    mtextswitch.setText(texts[i1]);
+                    h.postDelayed(this, delay);
+                }
+            }, delay);
+        }
 
     }
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -620,6 +642,14 @@ public class FragHandler extends AppCompatActivity implements Animation.Animatio
         oldback = oldyc;
         oldtext = oldyt;
 
+    }
+
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void getFBINFO(AccessToken otken) {

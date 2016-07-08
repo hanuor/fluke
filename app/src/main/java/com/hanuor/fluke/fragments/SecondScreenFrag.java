@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
@@ -48,7 +49,8 @@ public class SecondScreenFrag extends AppCompatActivity{
     RelativeLayout loading;
     RecyclerView cardList;
     Toolbar toolbar;
-    TextView notfound;
+    TextView notfound, bot;
+    ImageView fot;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +78,11 @@ public class SecondScreenFrag extends AppCompatActivity{
         mtextswitch = (TextSwitcher) findViewById(R.id.textswitcher);
         loading = (RelativeLayout) findViewById(R.id.loading);
         cardList = (RecyclerView) findViewById(R.id.cardList);
+        fot = (ImageView) findViewById(R.id.fot);
+        bot = (TextView) findViewById(R.id.bot);
+        bot.setTextColor(Color.parseColor("#cce8ebd8"));
+        bot.setText("Fot the bot says:");
+        bot.setTextSize(17);
 
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
@@ -128,6 +135,8 @@ public class SecondScreenFrag extends AppCompatActivity{
                 //Do your task here
                 if(fetchAll.size()==0){
                     notfound.setVisibility(View.VISIBLE);
+                    bot.setVisibility(View.VISIBLE);
+                    fot.setVisibility(View.VISIBLE);
                     recList.setVisibility(View.GONE);
                     loading.setVisibility(View.GONE);
                 }else
