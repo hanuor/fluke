@@ -6,10 +6,23 @@
     android:fitsSystemWindows="true"
     android:background="@drawable/back_grad"
     android:layout_height="match_parent">
-    <RelativeLayout
-        android:layout_marginTop="30dp"
+    <android.support.v7.widget.Toolbar
+
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+
+    android:background="#00ffffff"
+    android:minHeight="?attr/actionBarSize"
+    android:titleTextColor="#ffffff">
+
+</android.support.v7.widget.Toolbar>
+
+<RelativeLayout
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_centerInParent="true"
@@ -20,13 +33,13 @@
         <com.github.ybq.android.spinkit.SpinKitView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.CubeGrid"
+            style="@style/SpinKitView.Large.WanderingCubes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            app:SpinKit_Color="#D9490027" />
+            app:SpinKit_Color="#cce8ebd8" />
         <TextSwitcher
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +47,38 @@
             android:layout_margin="7dp"
             android:layout_below="@+id/spin_kit">
         </TextSwitcher>
+
         </RelativeLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="7dp"
+            android:visibility="gone"
+            android:layout_below="@+id/bot"
+            android:fontFamily="sans-serif-condensed"
+            android:id="@+id/notfound"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/w"
+        android:id="@+id/fot"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/fot"
+        android:id="@+id/bot"
+        android:fontFamily="sans-serif-condensed"
+        />
         <android.support.v7.widget.RecyclerView
         android:id="@+id/cardList"
             android:visibility="gone"

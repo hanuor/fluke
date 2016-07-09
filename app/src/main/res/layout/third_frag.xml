@@ -5,6 +5,11 @@
     xmlns:card_view="http://schemas.android.com/tools"
     android:background="@drawable/back_grad"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/CV"
+        android:layout_height="match_parent">
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_marginTop="30dp"
@@ -25,7 +30,6 @@
             app:civ_border_width="0.5dp"
             android:layout_margin="5dp"
             android:id="@+id/userImage"
-            android:layout_below="@+id/yp"
             app:civ_border_color="#212121"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
@@ -75,18 +79,34 @@
                 android:layout_above="@+id/loveInd"
                 android:background="#eeeeee"
                 android:id="@+id/textView3" />
-            <TextView
+
+            <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fluke 2016. Hanuor"
-                android:fontFamily="sans-serif-condensed"
+                android:id="@+id/backtohome"
+                android:src="@drawable/ic_search_sel"
+                android:layout_alignBottom="@+id/textView3"
+                android:layout_alignRight="@+id/textView2"
+                android:layout_alignEnd="@+id/textView2" />
 
-                android:layout_centerHorizontal="true"
-                android:textColor="#e0e0e0"
-                android:layout_above="@+id/textView3"
-               />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Log out"
+                android:textAllCaps="false"
+                android:textStyle="italic"
+                android:fontFamily="sans-serif-condensed"
+                android:id="@+id/logOut"
+
+                android:backgroundTint="#35252f"
+                android:layout_marginTop="11dp"
+                android:layout_below="@+id/userEmail"
+                android:layout_centerHorizontal="true" />
 
         </RelativeLayout>
+
     </android.support.v7.widget.CardView>
 
+
+    </RelativeLayout>
 </RelativeLayout>

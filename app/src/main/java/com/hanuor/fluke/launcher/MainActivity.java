@@ -2,17 +2,27 @@ package com.hanuor.fluke.launcher;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -25,7 +35,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.hanuor.fluke.R;
-import com.hanuor.fluke.init.PathView;
+import com.hanuor.fluke.database.IdDatabase;
 import com.hanuor.fluke.serverhandler.JSONManager;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
@@ -47,7 +57,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Animation.AnimationListener {
     LoginButton fblogin;
     CallbackManager mcallbackManager;
     ProfileTracker mProfileT;
@@ -57,10 +67,12 @@ public class MainActivity extends AppCompatActivity {
     String fbEmail;
     UploadService upservice;
     UserService us;
+    TextView Mm;
     public static String fbImage;
-
+    RelativeLayout reLayout;
     public static String fbName;
-
+    Animation fadeIn, faD;
+    IdDatabase idD;
     SocialService msocialserice;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
@@ -70,18 +82,54 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         verifyStoragePermissions(this);
 
+        if(!isNetworkAvailable()){
+            new AlertDialog.Builder(this)
+                    .setTitle("No Internet!")
+                    .setMessage("Please check your internet connection")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            finish();
+                        }
+                    })
+
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setCancelable(false)
+                    .show();
+        }
+        fadeIn = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.fade_in);
+
+        faD = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.fade_in);
+        fadeIn.setAnimationListener(this);
+        faD.setAnimationListener(this);
         us = App42API.buildUserService();
         msocialserice = App42API.buildSocialService();
         upservice = App42API.buildUploadService();
         mcallbackManager = CallbackManager.Factory.create();
 
-        setContentView(R.layout.activity_main);
-        PathView path_view = (PathView) findViewById(R.id.path);
-        path_view.init();
+        setContentView(R.layout.login_fluke);
+
+        idD = new IdDatabase(this);
+        reLayout = (RelativeLayout) findViewById(R.id.reLayout);
+        Mm = (TextView) findViewById(R.id.mm);
+        Mm.startAnimation(fadeIn);
         Profile mcheck = Profile.getCurrentProfile();
         if(mcheck!=null){
             AccessToken token = AccessToken.getCurrentAccessToken();
             Log.d("UID",token.getUserId());
+
+            if(idD.getLength()==0){
+                idD.insert(token.getUserId());
+                Log.d("UIDQ",token.getUserId() + " "+idD.query());
+
+            }else{
+                Log.d("TAB",""+idD.query());
+                idD.clear();
+                idD.insert(token.getUserId());
+                Log.d("UIDI",idD.query());
+            }
             Intent mac = new Intent();
             mac.setClass(MainActivity.this, FragHandler.class);
             mac.putExtra("FacebookId",token.getUserId());
@@ -112,7 +160,17 @@ public class MainActivity extends AppCompatActivity {
                                     AccessToken tokel = AccessToken.getCurrentAccessToken();
 
                                     if(tokel!=null){
+
                                         String userID = object.getString("id");
+                                        if(idD.getLength()==0){
+                                            idD.insert(object.getString("id"));
+                                            Log.d("UIDQ",object.getString("id") + " "+idD.query());
+
+                                        }else{
+                                            idD.clear();
+                                            idD.insert(object.getString("id"));
+
+                                        }
                                         msocialserice.linkUserFacebookAccount(userID, tokel.getToken(), new App42CallBack() {
                                             @Override
                                             public void onSuccess(Object o) {
@@ -163,6 +221,9 @@ public class MainActivity extends AppCompatActivity {
                                 jsonManager.setFbUserpic(rem);
                                 fbImage = rem;
                                 uploadProfilePicture(userid,rem);
+                                Intent startFluke = new Intent(MainActivity.this,FragHandler.class);
+                                startActivity(startFluke);
+                                finish();
                              }
                         });
                 Bundle parameters = new Bundle();
@@ -193,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mProfileT.startTracking();
+
 
 /*
 
@@ -241,6 +303,25 @@ public class MainActivity extends AppCompatActivity {
     private void uploadProfilePicture(String userid,String url) {
         Picasso.with(MainActivity.this).load(url).into(target);
 
+
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        if(animation == fadeIn){
+
+            reLayout.startAnimation(faD);
+            reLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
 
     }
 
@@ -384,4 +465,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.hanuor.fluke.apihits.MusicHits;
 import com.hanuor.fluke.database.FlukeApp42Database;
+import com.hanuor.fluke.database.IdDatabase;
 import com.hanuor.fluke.interfaces.ServerInterface;
 import com.shephertz.app42.paas.sdk.android.storage.Storage;
 
@@ -25,7 +26,8 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
     Context c;
     String playing_now = null;
     public ServerInterface serverInterface = null;
-
+    IdDatabase idDatabase;
+    String currentSong = null;
     public ServerTasker(Context c,ServerInterface serverInterface) {
         this.c = c;
         this.serverInterface = serverInterface;
@@ -33,6 +35,7 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
 
     @Override
     protected void onPreExecute() {
+        idDatabase = new IdDatabase(c);
         MusicHits mah = new MusicHits();
         IntentFilter ifco = mah.searchsong();
         c.registerReceiver(mReceiver, ifco);
@@ -93,7 +96,7 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
             try {
                 JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
                 String name = jsonObject.getString("fbName").replace(" ","%20");
-
+                String id = jsonObject.getString("id");
                 String track = jsonObject.getString("track").replaceAll(" ","%20");
                 String mail = jsonObject.getString("ebemail");
                 String artist = jsonObject.getString("artist").replace(" ","%20");
@@ -101,15 +104,23 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
                 String albumIm = jsonObject.getString("albumImage");
                 String time = jsonDocList.get(i).getCreatedAt();
                 String userPic = jsonObject.getString("fbUserpic");
+                Log.d("demons",""+id);
                /* if (playing_now != null) {
-                    if (playing_now.contentEquals(track)) {
+
                         if (name.contentEquals("Shantanu Johri")) {
                */           StringBuilder stringBuilder = new StringBuilder();
                             stringBuilder.append(name+" "+userPic+ " "+mail+" "+track+" "+artist+" "+artistIm+" "+ albumIm+" "+time);
                             // stringBuilder.append(name+FlukeApp42Database.separator+userPic+FlukeApp42Database.separator+mail+FlukeApp42Database.separator+track+FlukeApp42Database.separator+artist+FlukeApp42Database.separator+artistIm+FlukeApp42Database.separator+albumIm);
-                            idoo.add(stringBuilder.toString());
-                            Log.d("Pingin", "YEs" + playing_now + " " + idoo.size());
-                           //  } else {
+                 //Log.d("PPPP",""+idDatabase.query_song());
+              // if (playing_now.equalsIgnoreCase(track)) {
+                Log.d("hhhh",""+i);
+                    if (id.equalsIgnoreCase(idDatabase.query())) {
+
+                        currentSong = track.replace("%20"," ");
+                        Log.d("hhhhh",""+currentSong + " "+i);
+
+                    }
+                //  } else {
                             //pinging the server again
                             //fetchMatchingSuff(track);
                             Log.d("REEXE","REXEXEXEX");
@@ -117,6 +128,7 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
                             //sa.execute();
 /*
 
+                        }
                         }
                     }
                 }
@@ -127,6 +139,43 @@ public class ServerTasker extends AsyncTask<Void, Void, Storage> {
                 }
 
         }
+        for(int i = 0;i<jsonDocList.size()-1;i++){
+            try {
+                JSONObject jsonObject = new JSONObject(jsonDocList.get(i).getJsonDoc());
+                String name = jsonObject.getString("fbName").replace(" ","%20");
+                String id = jsonObject.getString("id");
+                String track = jsonObject.getString("track").replaceAll(" ","%20");
+                String mail = jsonObject.getString("ebemail");
+                String artist = jsonObject.getString("artist").replace(" ","%20");
+                String artistIm = jsonObject.getString("artistImage");
+                String albumIm = jsonObject.getString("albumImage");
+                String time = jsonDocList.get(i).getCreatedAt();
+                String userPic = jsonObject.getString("fbUserpic");
+                Log.d("demons",""+id);
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(name+" "+userPic+ " "+mail+" "+track+" "+artist+" "+artistIm+" "+ albumIm+" "+time);
+                // stringBuilder.append(name+FlukeApp42Database.separator+userPic+FlukeApp42Database.separator+mail+FlukeApp42Database.separator+track+FlukeApp42Database.separator+artist+FlukeApp42Database.separator+artistIm+FlukeApp42Database.separator+albumIm);
+                //Log.d("PPPP",""+idDatabase.query_song());
+                // if (playing_now.equalsIgnoreCase(track)) {
+                Log.d("hhhh",""+i);
+                Log.d("hhhh","Sere");
+                if(id.equalsIgnoreCase(idDatabase.query())){
+
+                }else {
+                    if (currentSong.equalsIgnoreCase(track.replace("%20", " "))) {
+                        Log.d("hhhhh", stringBuilder.toString());
+                        idoo.add(stringBuilder.toString());
+                    }
+                }
+              }catch(Exception e){
+                e.printStackTrace();
+            }
+
+
+
+
+        }
+
         if (idoo!=null) {
             serverInterface.fetchalldetails(idoo);
         }
